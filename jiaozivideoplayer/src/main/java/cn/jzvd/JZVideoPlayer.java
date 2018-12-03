@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
 
     public static final String TAG = "JiaoZiVideoPlayer";
-    public static final int THRESHOLD = 80;
+
     public static final int FULL_SCREEN_NORMAL_DELAY = 300;
 
     public static final int SCREEN_WINDOW_NORMAL = 0;
@@ -100,20 +100,9 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public int currentUrlMapIndex = 0;
     public int positionInList = -1;
     public int videoRotation = 0;
-    protected int mScreenWidth;
-    protected int mScreenHeight;
-    protected AudioManager mAudioManager;
+    public int mScreenWidth;
+    public int mScreenHeight;
 
-    protected boolean mTouchingProgressBar;
-    protected float mDownX;
-    protected float mDownY;
-    protected boolean mChangeVolume;
-    protected boolean mChangePosition;
-    protected boolean mChangeBrightness;
-    protected long mGestureDownPosition;
-    protected int mGestureDownVolume;
-    protected float mGestureDownBrightness;
-    protected long mSeekTimePosition;
     boolean tmp_test_back = false;
 
     public JZVideoPlayer(Context context) {
@@ -350,7 +339,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
         mScreenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
-        mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
 
         try {
             if (isCurrentPlay()) {

@@ -3,6 +3,7 @@ package cn.jzvd.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,8 +16,9 @@ import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PAUSE;
 import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PLAYING;
 import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PREPARING;
 
-abstract class JZDialog {
+public abstract class JZDialog {
 
+    static final int THRESHOLD = 80;
     private JZVideoPlayerStandard player;
 
     JZDialog(JZVideoPlayerStandard player) {
@@ -31,9 +33,11 @@ abstract class JZDialog {
         return player;
     }
 
-    public abstract void show();
+    public abstract void onTouch(MotionEvent event, JZDialogs dialogs);
 
     public abstract void dismiss();
+
+    public abstract boolean isHidden();
 
     Dialog createDialogWithView(View localView) {
         Dialog dialog = new Dialog(getContext(), R.style.jz_style_dialog_progress);

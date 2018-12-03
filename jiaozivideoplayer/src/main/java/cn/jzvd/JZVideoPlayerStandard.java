@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.AudioManager;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,9 +26,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import cn.jzvd.dialog.BrightnessDialog;
-import cn.jzvd.dialog.ProgressDialog;
-import cn.jzvd.dialog.VolumeDialog;
+import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.dialog.WifiDialog;
 
 /**
@@ -41,7 +36,7 @@ import cn.jzvd.dialog.WifiDialog;
 public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener, View.OnTouchListener {
 
     public ImageView startButton;
-    private SeekBar progressBar;
+    public SeekBar progressBar;
     protected ImageView fullscreenButton;
     private TextView currentTimeTextView, totalTimeTextView;
     public ViewGroup topContainer, bottomContainer;
@@ -61,9 +56,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
-    private final BrightnessDialog brightnessDialog = new BrightnessDialog(this);
-    private final ProgressDialog progressDialog = new ProgressDialog(this);
-    private final VolumeDialog volumeDialog = new VolumeDialog(this);
+    private boolean mTouchingProgressBar;
+
+    private JZDialogs dialogs;
     private final WifiDialog wifiDialog = new WifiDialog(this);
 
     public static long LAST_GET_BATTERYLEVEL_TIME = 0;
@@ -103,7 +98,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 onTextureViewContainerClick();
             }
         });
-        textureViewContainer.setOnTouchListener(new TextureViewTouchListener());
+
+        this.dialogs = new JZDialogs(this);
+        textureViewContainer.setOnTouchListener(new TextureViewTouchListener(dialogs));
 
         startButton = findViewById(R.id.start);
         fullscreenButton = findViewById(R.id.fullscreen);
@@ -448,7 +445,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
     }
 
-    protected void onClickUiToggle() {
+    public void onClickUiToggle() {
         if (bottomContainer.getVisibility() != View.VISIBLE) {
             setSystemTimeAndBattery();
             clarity.setText(dataSource.getKey(currentUrlMapIndex));
@@ -710,18 +707,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
-        volumeDialog.dismiss();
-        progressDialog.dismiss();
-        brightnessDialog.dismiss();
+        dialogs.dismiss();
         DismissControlViewTimerTask.finish();
     }
 
     @Override
     public void onCompletion() {
         super.onCompletion();
-        volumeDialog.dismiss();
-        progressDialog.dismiss();
-        brightnessDialog.dismiss();
+        dialogs.dismiss();
         textureViewContainer.removeView(JZMediaManager.textureView);
         ProgressTimerTask.finish();
         DismissControlViewTimerTask.finish();
@@ -806,136 +799,33 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     private class TextureViewTouchListener implements OnTouchListener {
 
+        private final JZDialogs dialogs;
+
+        public TextureViewTouchListener(JZDialogs dialogs) {
+            this.dialogs = dialogs;
+        }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            float x = event.getX();
-            float y = event.getY();
-
             int id = v.getId();
 
             if (id == R.id.surface_container) {
+                dialogs.onTouch(event);
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.i(TAG, "onTouch surfaceContainer actionDown [" + this.hashCode() + "] ");
                         mTouchingProgressBar = true;
-
-                        mDownX = x;
-                        mDownY = y;
-                        mChangeVolume = false;
-                        mChangePosition = false;
-                        mChangeBrightness = false;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         Log.i(TAG, "onTouch surfaceContainer actionMove [" + this.hashCode() + "] ");
-                        float deltaX = x - mDownX;
-                        float deltaY = y - mDownY;
-                        float absDeltaX = Math.abs(deltaX);
-                        float absDeltaY = Math.abs(deltaY);
-                        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-                            if (!mChangePosition && !mChangeVolume && !mChangeBrightness) {
-                                if (absDeltaX > THRESHOLD || absDeltaY > THRESHOLD) {
-                                    ProgressTimerTask.finish();
-                                    if (absDeltaX >= THRESHOLD) {
-                                        // 全屏模式下的CURRENT_STATE_ERROR状态下,不响应进度拖动事件.
-                                        // 否则会因为mediaplayer的状态非法导致App Crash
-                                        if (currentState != CURRENT_STATE_ERROR) {
-                                            mChangePosition = true;
-                                            mGestureDownPosition = getCurrentPositionWhenPlaying();
-                                        }
-                                    } else {
-                                        //如果y轴滑动距离超过设置的处理范围，那么进行滑动事件处理
-                                        if (mDownX < mScreenWidth * 0.5f) {//左侧改变亮度
-                                            mChangeBrightness = true;
-                                            WindowManager.LayoutParams lp = JZUtils.getWindow(getContext()).getAttributes();
-                                            if (lp.screenBrightness < 0) {
-                                                try {
-                                                    mGestureDownBrightness = Settings.System.getInt(getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
-                                                    Log.i(TAG, "current system brightness: " + mGestureDownBrightness);
-                                                } catch (Settings.SettingNotFoundException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            } else {
-                                                mGestureDownBrightness = lp.screenBrightness * 255;
-                                                Log.i(TAG, "current activity brightness: " + mGestureDownBrightness);
-                                            }
-                                        } else {//右侧改变声音
-                                            mChangeVolume = true;
-                                            mGestureDownVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (mChangePosition) {
-                            long totalTimeDuration = getDuration();
-                            mSeekTimePosition = (int) (mGestureDownPosition + deltaX * totalTimeDuration / mScreenWidth);
-                            if (mSeekTimePosition > totalTimeDuration)
-                                mSeekTimePosition = totalTimeDuration;
-                            String seekTime = JZUtils.stringForTime(mSeekTimePosition);
-                            String totalTime = JZUtils.stringForTime(totalTimeDuration);
-
-                            progressDialog.setProperties(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
-                            progressDialog.show();
-                        }
-                        if (mChangeVolume) {
-                            deltaY = -deltaY;
-                            int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                            int deltaV = (int) (max * deltaY * 3 / mScreenHeight);
-                            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mGestureDownVolume + deltaV, 0);
-                            //dialog中显示百分比
-                            int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / mScreenHeight);
-                            volumeDialog.setDeltaY(-deltaY);
-                            volumeDialog.setVolumePercent(volumePercent);
-                            volumeDialog.show();
-                        }
-
-                        if (mChangeBrightness) {
-                            deltaY = -deltaY;
-                            int deltaV = (int) (255 * deltaY * 3 / mScreenHeight);
-                            WindowManager.LayoutParams params = JZUtils.getWindow(getContext()).getAttributes();
-                            if (((mGestureDownBrightness + deltaV) / 255) >= 1) {//这和声音有区别，必须自己过滤一下负值
-                                params.screenBrightness = 1;
-                            } else if (((mGestureDownBrightness + deltaV) / 255) <= 0) {
-                                params.screenBrightness = 0.01f;
-                            } else {
-                                params.screenBrightness = (mGestureDownBrightness + deltaV) / 255;
-                            }
-                            JZUtils.getWindow(getContext()).setAttributes(params);
-                            //dialog中显示百分比
-                            int brightnessPercent = (int) (mGestureDownBrightness * 100 / 255 + deltaY * 3 * 100 / mScreenHeight);
-                            brightnessDialog.setBrightness(brightnessPercent);
-                            brightnessDialog.show();
-//                        mDownY = y;
-                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.i(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
                         mTouchingProgressBar = false;
-                        progressDialog.dismiss();
-                        volumeDialog.dismiss();
-                        brightnessDialog.dismiss();
-                        if (mChangePosition) {
-                            onEvent(JZUserAction.ON_TOUCH_SCREEN_SEEK_POSITION);
-                            JZMediaManager.seekTo(mSeekTimePosition);
-                            long duration = getDuration();
-                            int progress = (int) (mSeekTimePosition * 100 / (duration == 0 ? 1 : duration));
-                            progressBar.setProgress(progress);
-                        }
-                        if (mChangeVolume) {
-                            onEvent(JZUserAction.ON_TOUCH_SCREEN_SEEK_VOLUME);
-                        }
+
                         ProgressTimerTask.start(JZVideoPlayerStandard.this);
                         DismissControlViewTimerTask.start(JZVideoPlayerStandard.this);
-
-                        if (mChangePosition) {
-                            long duration = getDuration();
-                            int progress = (int) (mSeekTimePosition * 100 / (duration == 0 ? 1 : duration));
-                            bottomProgressBar.setProgress(progress);
-                        }
-                        if (!mChangePosition && !mChangeVolume) {
-                            onEvent(JZUserActionStandard.ON_CLICK_BLANK);
-                            onClickUiToggle();
-                        }
                         break;
                 }
             }
