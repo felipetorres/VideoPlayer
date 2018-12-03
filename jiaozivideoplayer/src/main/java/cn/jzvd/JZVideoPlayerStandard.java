@@ -741,4 +741,17 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         super.onQuitFullscreenOrTinyWindow();
         textureViewContainer.clearFloatScreen();
     }
+
+    @Override
+    public void onVideoSizeChanged() {
+        textureViewContainer.onVideoSizeChanged();
+    }
+
+    public void setVideoImageDisplayType(int type) {
+        textureViewContainer.setVideoImageDisplayType(type);
+    }
+
+    public void rotateTo(int degrees) {
+        textureViewContainer.rotateTo(degrees);
+    }
 }

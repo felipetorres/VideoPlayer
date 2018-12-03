@@ -39,7 +39,7 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
                 .load(VideoConstant.videoThumbs[0][7])
                 .into(myJZVideoPlayerStandard.thumbImageView);
         // The Point IS
-        myJZVideoPlayerStandard.videoRotation = 180;
+        myJZVideoPlayerStandard.rotateTo(180);
 
         mBtnRotation = findViewById(R.id.rotation_to_90);
         mBtnFillParent = findViewById(R.id.video_image_display_fill_parent);
@@ -55,19 +55,19 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rotation_to_90:
-                JZVideoPlayer.setTextureViewRotation(90);
+                myJZVideoPlayerStandard.rotateTo(90);
 
                 break;
             case R.id.video_image_display_fill_parent:
-                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_PARENT);
+                myJZVideoPlayerStandard.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_PARENT);
 
                 break;
             case R.id.video_image_display_fill_crop:
-                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_CROP);
+                myJZVideoPlayerStandard.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_CROP);
 
                 break;
             case R.id.video_image_diaplay_original:
-                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_ORIGINAL);
+                myJZVideoPlayerStandard.setVideoImageDisplayType(JZResizeTextureView.TYPE_ORIGINAL);
 
                 break;
         }
@@ -77,7 +77,7 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
     protected void onPause() {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
-        JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_NONE);
+        myJZVideoPlayerStandard.setVideoImageDisplayType(JZResizeTextureView.TYPE_NONE);
     }
 
     @Override

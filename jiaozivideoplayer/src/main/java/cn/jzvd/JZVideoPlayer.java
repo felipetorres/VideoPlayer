@@ -94,7 +94,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public JZDataSource dataSource;
     public int currentUrlMapIndex = 0;
     public int positionInList = -1;
-    public int videoRotation = 0;
     public int mScreenWidth;
     public int mScreenHeight;
 
@@ -311,19 +310,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
                     videoPlayer.startWindowTiny();
                 }
             }
-        }
-    }
-
-    public static void setTextureViewRotation(int rotation) {
-        if (JZMediaManager.textureView != null) {
-            JZMediaManager.textureView.setRotation(rotation);
-        }
-    }
-
-    public static void setVideoImageDisplayType(int type) {
-        if (JZMediaManager.textureView != null) {
-            JZMediaManager.textureView.setResizeTextureViewType(type);
-            JZMediaManager.textureView.requestLayout();
         }
     }
 
@@ -590,16 +576,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         showSupportActionBar(getContext());
     }
 
-    public void onVideoSizeChanged() {
-        Log.i(TAG, "onVideoSizeChanged " + " [" + this.hashCode() + "] ");
-        if (JZMediaManager.textureView != null) {
-            if (videoRotation != 0) {
-                JZMediaManager.textureView.setRotation(videoRotation);
-            }
-            JZMediaManager.textureView.setVideoSize(JZMediaManager.instance().currentVideoWidth, JZMediaManager.instance().currentVideoHeight);
-        }
-    }
-
     public long getCurrentPositionWhenPlaying() {
         long position = 0;
         //TODO 这块的判断应该根据MediaPlayer来
@@ -756,6 +732,8 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public void onSeekComplete() {
 
     }
+
+    public abstract void onVideoSizeChanged();
 
     public static class JZAutoFullscreenListener implements SensorEventListener {
         @Override

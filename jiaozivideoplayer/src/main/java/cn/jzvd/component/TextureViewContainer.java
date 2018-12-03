@@ -26,6 +26,7 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
 
     private final JZDialogs dialogs;
     private final ViewGroup view;
+    private int degrees = 0;
 
     public TextureViewContainer(JZVideoPlayerStandard player, JZDialogs dialogs) {
         super(player);
@@ -115,6 +116,32 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
             vp.removeView(tinyJzvd);
             if (tinyJzvd.textureViewContainer != null)
                 tinyJzvd.textureViewContainer.removeView(JZMediaManager.textureView);
+        }
+    }
+
+    public void onVideoSizeChanged() {
+        Log.i(TAG, "onVideoSizeChanged " + " [" + this.hashCode() + "] ");
+        if (JZMediaManager.textureView != null) {
+            if (degrees != 0) {
+                JZMediaManager.textureView.setRotation(degrees);
+            }
+            JZMediaManager instance = JZMediaManager.instance();
+            JZMediaManager.textureView.setVideoSize(instance.currentVideoWidth, instance.currentVideoHeight);
+        }
+    }
+
+
+    public void rotateTo(int degrees) {
+        this.degrees = degrees;
+        if (JZMediaManager.textureView != null) {
+            JZMediaManager.textureView.setRotation(degrees);
+        }
+    }
+
+    public void setVideoImageDisplayType(int type) {
+        if (JZMediaManager.textureView != null) {
+            JZMediaManager.textureView.setResizeTextureViewType(type);
+            JZMediaManager.textureView.requestLayout();
         }
     }
 }
