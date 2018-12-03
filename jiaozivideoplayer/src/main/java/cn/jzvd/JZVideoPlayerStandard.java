@@ -7,14 +7,11 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -26,6 +23,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.dialog.WifiDialog;
 
@@ -40,7 +38,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     protected ImageView fullscreenButton;
     private TextView currentTimeTextView, totalTimeTextView;
     public ViewGroup topContainer, bottomContainer;
-    private ViewGroup textureViewContainer;
+    public TextureViewContainer textureViewContainer;
 
     public ImageView backButton;
     public ProgressBar bottomProgressBar, loadingProgressBar;
@@ -56,7 +54,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
-    private boolean mTouchingProgressBar;
+    public boolean mTouchingProgressBar;
 
     private JZDialogs dialogs;
     private final WifiDialog wifiDialog = new WifiDialog(this);
@@ -90,17 +88,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void init(Context context) {
         super.init(context);
 
-        textureViewContainer = findViewById(R.id.surface_container);
-
-        textureViewContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onTextureViewContainerClick();
-            }
-        });
-
         this.dialogs = new JZDialogs(this);
-        textureViewContainer.setOnTouchListener(new TextureViewTouchListener(dialogs));
+        textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
         startButton = findViewById(R.id.start);
         fullscreenButton = findViewById(R.id.fullscreen);
@@ -152,6 +141,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 clarity.setVisibility(View.VISIBLE);
             }
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_fullscreen));
+            textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
             fullscreenButton.setImageResource(R.drawable.jz_enlarge);
@@ -166,6 +156,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
             batteryTimeLayout.setVisibility(View.GONE);
             clarity.setVisibility(View.GONE);
+            textureViewContainer.addTextureView();
         }
         setSystemTimeAndBattery();
 
@@ -248,9 +239,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomProgressBar.setProgress(100);
     }
 
-    @Override
     public void onTextureViewContainerClick() {
-        super.onTextureViewContainerClick();
         DismissControlViewTimerTask.start(this);
     }
 
@@ -390,8 +379,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 wifiDialog.show();
                 return;
             }
-            initTextureView();//和开始播放的代码重复
-            addTextureView();
+            textureViewContainer.initTextureView();//和开始播放的代码重复
             JZMediaManager.setDataSource(dataSource);
             JZMediaManager.setCurrentPath(dataSource.getCurrentPath(currentUrlMapIndex));
             onStatePreparing();
@@ -728,20 +716,21 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void startVideo() {
         JZVideoPlayerManager.completeAll();
         Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
-        initTextureView();
-        addTextureView();
+        textureViewContainer.initTextureView();
         super.startVideo();
     }
 
     @Override
     public void playOnThisJzvd() {
         super.playOnThisJzvd();
-        addTextureView();
+        onQuitFullscreenOrTinyWindow();
+        textureViewContainer.addTextureView();
     }
 
     @Override
     public void startWindowFullscreen() {
         textureViewContainer.removeView(JZMediaManager.textureView);
+        textureViewContainer.addTextureView();
         super.startWindowFullscreen();
     }
 
@@ -752,84 +741,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     @Override
-    public void clearFloatScreen() {
-        super.clearFloatScreen();
-        JZUtils.setRequestedOrientation(getContext(), NORMAL_ORIENTATION);
-        showSupportActionBar(getContext());
-        ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
-                .findViewById(Window.ID_ANDROID_CONTENT);
-        JZVideoPlayerStandard fullJzvd = vp.findViewById(R.id.jz_fullscreen_id);
-        JZVideoPlayerStandard tinyJzvd = vp.findViewById(R.id.jz_tiny_id);
-
-        if (fullJzvd != null) {
-            vp.removeView(fullJzvd);
-            if (fullJzvd.textureViewContainer != null)
-                fullJzvd.textureViewContainer.removeView(JZMediaManager.textureView);
-        }
-        if (tinyJzvd != null) {
-            vp.removeView(tinyJzvd);
-            if (tinyJzvd.textureViewContainer != null)
-                tinyJzvd.textureViewContainer.removeView(JZMediaManager.textureView);
-        }
-        JZVideoPlayerManager.setSecondFloor(null);
-    }
-
-    public void initTextureView() {
-        removeTextureView();
-        JZMediaManager.textureView = new JZResizeTextureView(getContext());
-        JZMediaManager.textureView.setSurfaceTextureListener(JZMediaManager.instance());
-    }
-
-    public void addTextureView() {
-        Log.d(TAG, "addTextureView [" + this.hashCode() + "] ");
-        FrameLayout.LayoutParams layoutParams =
-                new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        Gravity.CENTER);
-        textureViewContainer.addView(JZMediaManager.textureView, layoutParams);
-    }
-
-    public void removeTextureView() {
-        JZMediaManager.savedSurfaceTexture = null;
-        if (JZMediaManager.textureView != null && JZMediaManager.textureView.getParent() != null) {
-            ((ViewGroup) JZMediaManager.textureView.getParent()).removeView(JZMediaManager.textureView);
-        }
-    }
-
-    private class TextureViewTouchListener implements OnTouchListener {
-
-        private final JZDialogs dialogs;
-
-        public TextureViewTouchListener(JZDialogs dialogs) {
-            this.dialogs = dialogs;
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int id = v.getId();
-
-            if (id == R.id.surface_container) {
-                dialogs.onTouch(event);
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.i(TAG, "onTouch surfaceContainer actionDown [" + this.hashCode() + "] ");
-                        mTouchingProgressBar = true;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.i(TAG, "onTouch surfaceContainer actionMove [" + this.hashCode() + "] ");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.i(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
-                        mTouchingProgressBar = false;
-
-                        ProgressTimerTask.start(JZVideoPlayerStandard.this);
-                        DismissControlViewTimerTask.start(JZVideoPlayerStandard.this);
-                        break;
-                }
-            }
-            return false;
-        }
+    public void onQuitFullscreenOrTinyWindow() {
+        super.onQuitFullscreenOrTinyWindow();
+        textureViewContainer.clearFloatScreen();
     }
 }

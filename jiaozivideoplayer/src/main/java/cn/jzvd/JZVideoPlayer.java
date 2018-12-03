@@ -188,9 +188,13 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     public static void quitFullscreenOrTinyWindow() {
         //直接退出全屏和小窗
-        JZVideoPlayerManager.getFirstFloor().clearFloatScreen();
+        JZVideoPlayerManager.getFirstFloor().onQuitFullscreenOrTinyWindow();
         JZMediaManager.instance().releaseMediaPlayer();
         JZVideoPlayerManager.completeAll();
+    }
+
+    public void onQuitFullscreenOrTinyWindow() {
+        JZVideoPlayerManager.setSecondFloor(null);
     }
 
     @SuppressLint("RestrictedApi")
@@ -348,8 +352,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
             e.printStackTrace();
         }
     }
-
-    public void onTextureViewContainerClick() { }
 
     protected void onClickUiToggle() { }
 
@@ -593,8 +595,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         showSupportActionBar(getContext());
     }
 
-    public void clearFloatScreen() { }
-
     public void onVideoSizeChanged() {
         Log.i(TAG, "onVideoSizeChanged " + " [" + this.hashCode() + "] ");
         if (JZMediaManager.textureView != null) {
@@ -654,7 +654,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
             jzVideoPlayer.setUp(dataSource, currentUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             jzVideoPlayer.setState(currentState);
-            jzVideoPlayer.addTextureView();
             JZVideoPlayerManager.setSecondFloor(jzVideoPlayer);
 //            final Animation ra = AnimationUtils.loadAnimation(getContext(), R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
@@ -692,7 +691,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
             vp.addView(jzVideoPlayer, lp);
             jzVideoPlayer.setUp(dataSource, currentUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_TINY, objects);
             jzVideoPlayer.setState(currentState);
-            jzVideoPlayer.addTextureView();
             JZVideoPlayerManager.setSecondFloor(jzVideoPlayer);
             onStateNormal();
         } catch (InstantiationException e) {
@@ -701,8 +699,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
             e.printStackTrace();
         }
     }
-
-    protected void addTextureView() { }
 
     public boolean isCurrentPlay() {
         return isCurrentJZVD()
@@ -720,7 +716,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         //1.清空全屏和小窗的jzvd
         currentState = JZVideoPlayerManager.getSecondFloor().currentState;
         currentUrlMapIndex = JZVideoPlayerManager.getSecondFloor().currentUrlMapIndex;
-        clearFloatScreen();
         //2.在本jzvd上播放
         setState(currentState);
 //        removeTextureView();

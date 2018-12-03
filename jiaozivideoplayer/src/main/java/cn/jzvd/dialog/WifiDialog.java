@@ -36,7 +36,7 @@ public class WifiDialog {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                player.clearFloatScreen();
+                player.onQuitFullscreenOrTinyWindow();
             }
         });
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
