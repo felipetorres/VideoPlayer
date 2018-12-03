@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.bumptech.glide.Glide;
 
+import cn.jzvd.JZResizeTextureView;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 
@@ -58,15 +59,15 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
 
                 break;
             case R.id.video_image_display_fill_parent:
-                JZVideoPlayer.setVideoImageDisplayType(JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT);
+                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_PARENT);
 
                 break;
             case R.id.video_image_display_fill_crop:
-                JZVideoPlayer.setVideoImageDisplayType(JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_FILL_CROP);
 
                 break;
             case R.id.video_image_diaplay_original:
-                JZVideoPlayer.setVideoImageDisplayType(JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE_ORIGINAL);
+                JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_ORIGINAL);
 
                 break;
         }
@@ -76,7 +77,7 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
     protected void onPause() {
         super.onPause();
         JZVideoPlayer.releaseAllVideos();
-        JZVideoPlayer.setVideoImageDisplayType(JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+        JZVideoPlayer.setVideoImageDisplayType(JZResizeTextureView.TYPE_NONE);
     }
 
     @Override

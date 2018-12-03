@@ -239,10 +239,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomProgressBar.setProgress(100);
     }
 
-    public void onTextureViewContainerClick() {
-        DismissControlViewTimerTask.start(this);
-    }
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();

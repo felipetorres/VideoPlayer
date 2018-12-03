@@ -47,16 +47,11 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public static final int CURRENT_STATE_ERROR = 7;
 
     public static final String URL_KEY_DEFAULT = "URL_KEY_DEFAULT";//Key used when playing one address.
-    public static final int VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER = 0;//default
-    public static final int VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT = 1;
-    public static final int VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP = 2;
-    public static final int VIDEO_IMAGE_DISPLAY_TYPE_ORIGINAL = 3;
     public static boolean ACTION_BAR_EXIST = true;
     public static boolean TOOL_BAR_EXIST = true;
     public static int FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = true;
-    public static int VIDEO_IMAGE_DISPLAY_TYPE = 0;
     public static long CLICK_QUIT_FULLSCREEN_TIME = 0;
     public static long lastAutoFullscreenTime = 0;
 
@@ -326,8 +321,8 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     }
 
     public static void setVideoImageDisplayType(int type) {
-        JZVideoPlayer.VIDEO_IMAGE_DISPLAY_TYPE = type;
         if (JZMediaManager.textureView != null) {
+            JZMediaManager.textureView.setResizeTextureViewType(type);
             JZMediaManager.textureView.requestLayout();
         }
     }
