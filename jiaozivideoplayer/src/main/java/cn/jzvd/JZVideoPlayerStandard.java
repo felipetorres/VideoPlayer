@@ -1,10 +1,7 @@
 package cn.jzvd;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -31,6 +28,11 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import cn.jzvd.dialog.BrightnessDialog;
+import cn.jzvd.dialog.ProgressDialog;
+import cn.jzvd.dialog.VolumeDialog;
+import cn.jzvd.dialog.WifiDialog;
 
 /**
  * Created by Nathen
@@ -59,18 +61,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
-    protected Dialog mProgressDialog;
-    protected ProgressBar mDialogProgressBar;
-    protected TextView mDialogSeekTime;
-    protected TextView mDialogTotalTime;
-    protected ImageView mDialogIcon;
-    protected Dialog mVolumeDialog;
-    protected ProgressBar mDialogVolumeProgressBar;
-    protected TextView mDialogVolumeTextView;
-    protected ImageView mDialogVolumeImageView;
-    protected Dialog mBrightnessDialog;
-    protected ProgressBar mDialogBrightnessProgressBar;
-    protected TextView mDialogBrightnessTextView;
+    private final BrightnessDialog brightnessDialog = new BrightnessDialog(this);
+    private final ProgressDialog progressDialog = new ProgressDialog(this);
+    private final VolumeDialog volumeDialog = new VolumeDialog(this);
+    private final WifiDialog wifiDialog = new WifiDialog(this);
+
     public static long LAST_GET_BATTERYLEVEL_TIME = 0;
     public static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
 
@@ -290,8 +285,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             if (currentState == CURRENT_STATE_NORMAL) {
                 if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") && !
                         dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
-                        !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-                    showWifiDialog();
+                        !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
+                    wifiDialog.show();
                     return;
                 }
                 startVideo();
@@ -328,8 +323,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             if (currentState == CURRENT_STATE_NORMAL) {
                 if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") &&
                         !dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
-                        !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-                    showWifiDialog();
+                        !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
+                    wifiDialog.show();
                     return;
                 }
                 onEvent(JZUserActionStandard.ON_CLICK_START_THUMB);
@@ -394,8 +389,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             }
             if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") && !
                     dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
-                    !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-                showWifiDialog();
+                    !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
+                wifiDialog.show();
                 return;
             }
             initTextureView();//和开始播放的代码重复
@@ -405,36 +400,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             onStatePreparing();
             onEvent(JZUserAction.ON_CLICK_START_ERROR);
         }
-    }
-
-    @Override
-    public void showWifiDialog() {
-        super.showWifiDialog();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                onEvent(JZUserActionStandard.ON_CLICK_START_WIFIDIALOG);
-                startVideo();
-                WIFI_TIP_DIALOG_SHOWED = true;
-            }
-        });
-        builder.setNegativeButton(getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                clearFloatScreen();
-            }
-        });
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
     }
 
     @Override
@@ -541,30 +506,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
     }
 
-    public void onCLickUiToggleToClear() {
-        if (currentState == CURRENT_STATE_PREPARING) {
-            if (bottomContainer.getVisibility() == View.VISIBLE) {
-                changeUiToPreparing();
-            } else {
-            }
-        } else if (currentState == CURRENT_STATE_PLAYING) {
-            if (bottomContainer.getVisibility() == View.VISIBLE) {
-                changeUiToPlayingClear();
-            } else {
-            }
-        } else if (currentState == CURRENT_STATE_PAUSE) {
-            if (bottomContainer.getVisibility() == View.VISIBLE) {
-                changeUiToPauseClear();
-            } else {
-            }
-        } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
-            if (bottomContainer.getVisibility() == View.VISIBLE) {
-                changeUiToComplete();
-            } else {
-            }
-        }
-    }
-
     public void setProgressAndText(int progress, long position, long duration) {
 //        Log.d(TAG, "setProgressAndText: progress=" + progress + " position=" + position + " duration=" + duration);
         if (!mTouchingProgressBar) {
@@ -609,7 +550,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
     }
 
-    private void changeUiToPreparing() {
+    public void changeUiToPreparing() {
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
@@ -647,7 +588,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     }
 
-    private void changeUiToPlayingClear() {
+    public void changeUiToPlayingClear() {
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
@@ -682,7 +623,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
     }
 
-    private void changeUiToPauseClear() {
+    public void changeUiToPauseClear() {
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
@@ -699,7 +640,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     }
 
-    private void changeUiToComplete() {
+    public void changeUiToComplete() {
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
@@ -767,128 +708,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     @Override
-    public void showProgressDialog(float deltaX, String seekTime, long seekTimePosition, String totalTime, long totalTimeDuration) {
-        super.showProgressDialog(deltaX, seekTime, seekTimePosition, totalTime, totalTimeDuration);
-        if (mProgressDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jz_dialog_progress, null);
-            mDialogProgressBar = localView.findViewById(R.id.duration_progressbar);
-            mDialogSeekTime = localView.findViewById(R.id.tv_current);
-            mDialogTotalTime = localView.findViewById(R.id.tv_duration);
-            mDialogIcon = localView.findViewById(R.id.duration_image_tip);
-            mProgressDialog = createDialogWithView(localView);
-        }
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
-
-        mDialogSeekTime.setText(seekTime);
-        mDialogTotalTime.setText(" / " + totalTime);
-        mDialogProgressBar.setProgress(totalTimeDuration <= 0 ? 0 : (int) (seekTimePosition * 100 / totalTimeDuration));
-        if (deltaX > 0) {
-            mDialogIcon.setBackgroundResource(R.drawable.jz_forward_icon);
-        } else {
-            mDialogIcon.setBackgroundResource(R.drawable.jz_backward_icon);
-        }
-        onCLickUiToggleToClear();
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-        super.dismissProgressDialog();
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void showVolumeDialog(float deltaY, int volumePercent) {
-        super.showVolumeDialog(deltaY, volumePercent);
-        if (mVolumeDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jz_dialog_volume, null);
-            mDialogVolumeImageView = localView.findViewById(R.id.volume_image_tip);
-            mDialogVolumeTextView = localView.findViewById(R.id.tv_volume);
-            mDialogVolumeProgressBar = localView.findViewById(R.id.volume_progressbar);
-            mVolumeDialog = createDialogWithView(localView);
-        }
-        if (!mVolumeDialog.isShowing()) {
-            mVolumeDialog.show();
-        }
-        if (volumePercent <= 0) {
-            mDialogVolumeImageView.setBackgroundResource(R.drawable.jz_close_volume);
-        } else {
-            mDialogVolumeImageView.setBackgroundResource(R.drawable.jz_add_volume);
-        }
-        if (volumePercent > 100) {
-            volumePercent = 100;
-        } else if (volumePercent < 0) {
-            volumePercent = 0;
-        }
-        mDialogVolumeTextView.setText(volumePercent + "%");
-        mDialogVolumeProgressBar.setProgress(volumePercent);
-        onCLickUiToggleToClear();
-    }
-
-    @Override
-    public void dismissVolumeDialog() {
-        super.dismissVolumeDialog();
-        if (mVolumeDialog != null) {
-            mVolumeDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void showBrightnessDialog(int brightnessPercent) {
-        super.showBrightnessDialog(brightnessPercent);
-        if (mBrightnessDialog == null) {
-            View localView = LayoutInflater.from(getContext()).inflate(R.layout.jz_dialog_brightness, null);
-            mDialogBrightnessTextView = localView.findViewById(R.id.tv_brightness);
-            mDialogBrightnessProgressBar = localView.findViewById(R.id.brightness_progressbar);
-            mBrightnessDialog = createDialogWithView(localView);
-        }
-        if (!mBrightnessDialog.isShowing()) {
-            mBrightnessDialog.show();
-        }
-        if (brightnessPercent > 100) {
-            brightnessPercent = 100;
-        } else if (brightnessPercent < 0) {
-            brightnessPercent = 0;
-        }
-        mDialogBrightnessTextView.setText(brightnessPercent + "%");
-        mDialogBrightnessProgressBar.setProgress(brightnessPercent);
-        onCLickUiToggleToClear();
-    }
-
-    @Override
-    public void dismissBrightnessDialog() {
-        super.dismissBrightnessDialog();
-        if (mBrightnessDialog != null) {
-            mBrightnessDialog.dismiss();
-        }
-    }
-
-    public Dialog createDialogWithView(View localView) {
-        Dialog dialog = new Dialog(getContext(), R.style.jz_style_dialog_progress);
-        dialog.setContentView(localView);
-        Window window = dialog.getWindow();
-        window.addFlags(Window.FEATURE_ACTION_BAR);
-        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        window.setLayout(-2, -2);
-        WindowManager.LayoutParams localLayoutParams = window.getAttributes();
-        localLayoutParams.gravity = Gravity.CENTER;
-        window.setAttributes(localLayoutParams);
-        return dialog;
-    }
-
-    @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
+        volumeDialog.dismiss();
+        progressDialog.dismiss();
+        brightnessDialog.dismiss();
         DismissControlViewTimerTask.finish();
     }
 
     @Override
     public void onCompletion() {
         super.onCompletion();
+        volumeDialog.dismiss();
+        progressDialog.dismiss();
+        brightnessDialog.dismiss();
         textureViewContainer.removeView(JZMediaManager.textureView);
         ProgressTimerTask.finish();
         DismissControlViewTimerTask.finish();
@@ -1041,7 +874,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                             String seekTime = JZUtils.stringForTime(mSeekTimePosition);
                             String totalTime = JZUtils.stringForTime(totalTimeDuration);
 
-                            showProgressDialog(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
+                            progressDialog.setProperties(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
+                            progressDialog.show();
                         }
                         if (mChangeVolume) {
                             deltaY = -deltaY;
@@ -1050,7 +884,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mGestureDownVolume + deltaV, 0);
                             //dialog中显示百分比
                             int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / mScreenHeight);
-                            showVolumeDialog(-deltaY, volumePercent);
+                            volumeDialog.setDeltaY(-deltaY);
+                            volumeDialog.setVolumePercent(volumePercent);
+                            volumeDialog.show();
                         }
 
                         if (mChangeBrightness) {
@@ -1067,16 +903,17 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                             JZUtils.getWindow(getContext()).setAttributes(params);
                             //dialog中显示百分比
                             int brightnessPercent = (int) (mGestureDownBrightness * 100 / 255 + deltaY * 3 * 100 / mScreenHeight);
-                            showBrightnessDialog(brightnessPercent);
+                            brightnessDialog.setBrightness(brightnessPercent);
+                            brightnessDialog.show();
 //                        mDownY = y;
                         }
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.i(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
                         mTouchingProgressBar = false;
-                        dismissProgressDialog();
-                        dismissVolumeDialog();
-                        dismissBrightnessDialog();
+                        progressDialog.dismiss();
+                        volumeDialog.dismiss();
+                        brightnessDialog.dismiss();
                         if (mChangePosition) {
                             onEvent(JZUserAction.ON_TOUCH_SCREEN_SEEK_POSITION);
                             JZMediaManager.seekTo(mSeekTimePosition);

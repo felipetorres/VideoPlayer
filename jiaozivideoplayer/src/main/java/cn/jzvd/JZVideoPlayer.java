@@ -56,7 +56,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public static int FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = true;
-    public static boolean WIFI_TIP_DIALOG_SHOWED = false;
     public static int VIDEO_IMAGE_DISPLAY_TYPE = 0;
     public static long CLICK_QUIT_FULLSCREEN_TIME = 0;
     public static long lastAutoFullscreenTime = 0;
@@ -543,9 +542,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         Runtime.getRuntime().gc();
         Log.i(TAG, "onAutoCompletion " + " [" + this.hashCode() + "] ");
         onEvent(JZUserAction.ON_AUTO_COMPLETE);
-        dismissVolumeDialog();
-        dismissProgressDialog();
-        dismissBrightnessDialog();
+
         onStateAutoComplete();
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN || currentScreen == SCREEN_WINDOW_TINY) {
@@ -561,9 +558,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
             long position = getCurrentPositionWhenPlaying();
             JZUtils.saveProgress(getContext(), dataSource.getCurrentPath(currentUrlMapIndex), position);
         }
-        dismissBrightnessDialog();
-        dismissProgressDialog();
-        dismissVolumeDialog();
         onStateNormal();
 
         JZMediaManager.instance().currentVideoWidth = 0;
@@ -782,34 +776,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     //TODO 是否有用
     public void onSeekComplete() {
-
-    }
-
-    public void showWifiDialog() {
-    }
-
-    public void showProgressDialog(float deltaX,
-                                   String seekTime, long seekTimePosition,
-                                   String totalTime, long totalTimeDuration) {
-    }
-
-    public void dismissProgressDialog() {
-
-    }
-
-    public void showVolumeDialog(float deltaY, int volumePercent) {
-
-    }
-
-    public void dismissVolumeDialog() {
-
-    }
-
-    public void showBrightnessDialog(int brightnessPercent) {
-
-    }
-
-    public void dismissBrightnessDialog() {
 
     }
 
