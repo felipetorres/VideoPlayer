@@ -72,8 +72,7 @@ public class ActivityApiUISmallChange extends AppCompatActivity {
         Glide.with(this)
                 .load(VideoConstant.videoThumbs[0][1])
                 .into(jzVideoPlayerStandard_1_1.thumbImageView);
-        jzVideoPlayerStandard_1_1.widthRatio = 1;
-        jzVideoPlayerStandard_1_1.heightRatio = 1;
+        jzVideoPlayerStandard_1_1.setScreenRatio(1, 1);
 
         jzVideoPlayerStandard_16_9 = findViewById(R.id.jz_videoplayer_16_9);
         jzVideoPlayerStandard_16_9.setUp(VideoConstant.videoUrls[0][1], JZVideoPlayer.SCREEN_WINDOW_NORMAL
@@ -81,8 +80,7 @@ public class ActivityApiUISmallChange extends AppCompatActivity {
         Glide.with(this)
                 .load(VideoConstant.videoThumbs[0][1])
                 .into(jzVideoPlayerStandard_16_9.thumbImageView);
-        jzVideoPlayerStandard_16_9.widthRatio = 16;
-        jzVideoPlayerStandard_16_9.heightRatio = 9;
+        jzVideoPlayerStandard_16_9.setScreenRatio(16, 9);
 
         jzVideoPlayerStandardVolumeAfterFullscreen = findViewById(R.id.jz_videoplayer_volume);
         jzVideoPlayerStandardVolumeAfterFullscreen.setUp(VideoConstant.videoUrls[0][1], JZVideoPlayer.SCREEN_WINDOW_NORMAL

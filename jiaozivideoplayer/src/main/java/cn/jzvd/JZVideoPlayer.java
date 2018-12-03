@@ -89,13 +89,11 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public Object[] objects = null;
     public long seekToInAdvance = 0;
 
-    public int widthRatio = 0;
-    public int heightRatio = 0;
+    private int widthRatio = 0;
+    private int heightRatio = 0;
     public JZDataSource dataSource;
     public int currentUrlMapIndex = 0;
     public int positionInList = -1;
-    public int mScreenWidth;
-    public int mScreenHeight;
 
     boolean tmp_test_back = false;
 
@@ -107,6 +105,30 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public JZVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
+    }
+
+    public void init(Context context) {
+        View.inflate(context, getLayoutId(), this);
+
+        try {
+            if (isCurrentPlay()) {
+                NORMAL_ORIENTATION = ((AppCompatActivity) context).getRequestedOrientation();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public abstract int getLayoutId();
+
+    public boolean isCurrentPlay() {
+        return isCurrentJZVD()
+                && dataSource.containsUri(JZMediaManager.getCurrentPath());//不仅正在播放的url不能一样，并且各个清晰度也不能一样
+    }
+
+    public boolean isCurrentJZVD() {
+        return JZVideoPlayerManager.getCurrentJzvd() != null
+                && JZVideoPlayerManager.getCurrentJzvd() == this;
     }
 
     public static void releaseAllVideos() {
@@ -317,23 +339,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         return dataSource.getCurrentPath(currentUrlMapIndex);
     }
 
-    public abstract int getLayoutId();
-
-    public void init(Context context) {
-        View.inflate(context, getLayoutId(), this);
-
-        mScreenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-        mScreenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
-
-        try {
-            if (isCurrentPlay()) {
-                NORMAL_ORIENTATION = ((AppCompatActivity) context).getRequestedOrientation();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     protected void onClickUiToggle() { }
 
     public void setUp(String url, int screen, Object... objects) {
@@ -487,6 +492,11 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
                 JZMediaManager.instance().releaseMediaPlayer();
             }
         }
+    }
+
+    public void setScreenRatio(int widthRatio, int heightRatio) {
+        this.widthRatio = widthRatio;
+        this.heightRatio = heightRatio;
     }
 
     @Override
@@ -669,16 +679,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isCurrentPlay() {
-        return isCurrentJZVD()
-                && dataSource.containsUri(JZMediaManager.getCurrentPath());//不仅正在播放的url不能一样，并且各个清晰度也不能一样
-    }
-
-    public boolean isCurrentJZVD() {
-        return JZVideoPlayerManager.getCurrentJzvd() != null
-                && JZVideoPlayerManager.getCurrentJzvd() == this;
     }
 
     //退出全屏和小窗的方法

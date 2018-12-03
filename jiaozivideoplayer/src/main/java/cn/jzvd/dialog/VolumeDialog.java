@@ -83,7 +83,7 @@ public class VolumeDialog extends JZDialog {
         if (getPlayer().currentScreen == SCREEN_WINDOW_FULLSCREEN && dialogs.hasAllHidden()) {
             ProgressTimerTask.finish();
 
-            if (absDeltaY > THRESHOLD && mDownX > getPlayer().mScreenWidth * 0.5f) {
+            if (absDeltaY > THRESHOLD && mDownX > getScreenWidth() * 0.5f) {
                 mChangeVolume = true;
                 mGestureDownVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             }
@@ -95,9 +95,9 @@ public class VolumeDialog extends JZDialog {
         if (mChangeVolume) {
             this.deltaY = -deltaY;
             int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            int deltaV = (int) (max * deltaY * 3 / getPlayer().mScreenHeight);
+            int deltaV = (int) (max * deltaY * 3 / getScreenHeight());
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mGestureDownVolume + deltaV, 0);
-            int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / getPlayer().mScreenHeight);
+            int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / getScreenHeight());
             this.volumePercent = volumePercent;
             show();
         }

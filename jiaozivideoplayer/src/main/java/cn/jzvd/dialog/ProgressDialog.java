@@ -109,7 +109,7 @@ public class ProgressDialog extends JZDialog {
     private void run() {
         if (mChangePosition) {
             long totalTimeDuration = getPlayer().getDuration();
-            mSeekTimePosition = (int) (mGestureDownPosition + deltaX * totalTimeDuration / getPlayer().mScreenWidth);
+            mSeekTimePosition = (int) (mGestureDownPosition + deltaX * totalTimeDuration / getScreenWidth());
 
             if (mSeekTimePosition > totalTimeDuration)
                 mSeekTimePosition = totalTimeDuration;

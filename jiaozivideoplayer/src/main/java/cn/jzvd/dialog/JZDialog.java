@@ -19,10 +19,15 @@ import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PREPARING;
 public abstract class JZDialog {
 
     static final int THRESHOLD = 80;
+
+    private final int mScreenWidth;
+    private final int mScreenHeight;
     private JZVideoPlayerStandard player;
 
     JZDialog(JZVideoPlayerStandard player) {
         this.player = player;
+        this.mScreenWidth = player.getResources().getDisplayMetrics().widthPixels;
+        this.mScreenHeight = player.getResources().getDisplayMetrics().heightPixels;
     }
 
     Context getContext() {
@@ -31,6 +36,14 @@ public abstract class JZDialog {
 
     JZVideoPlayerStandard getPlayer() {
         return player;
+    }
+
+    public int getScreenHeight() {
+        return mScreenHeight;
+    }
+
+    public int getScreenWidth() {
+        return mScreenWidth;
     }
 
     public abstract void onTouch(MotionEvent event, JZDialogs dialogs);

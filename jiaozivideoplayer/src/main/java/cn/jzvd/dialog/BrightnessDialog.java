@@ -77,7 +77,7 @@ public class BrightnessDialog extends JZDialog {
         if (getPlayer().currentScreen == SCREEN_WINDOW_FULLSCREEN && dialogs.hasAllHidden()) {
             ProgressTimerTask.finish();
 
-            if (absDeltaY > THRESHOLD && mDownX < getPlayer().mScreenWidth * 0.5f) {//左侧改变亮度
+            if (absDeltaY > THRESHOLD && mDownX < getScreenWidth() * 0.5f) {//左侧改变亮度
                 mChangeBrightness = true;
                 WindowManager.LayoutParams lp = JZUtils.getWindow(getContext()).getAttributes();
                 if (lp.screenBrightness < 0) {
@@ -100,7 +100,7 @@ public class BrightnessDialog extends JZDialog {
     private void run() {
         if (mChangeBrightness) {
             deltaY = -deltaY;
-            int deltaV = (int) (255 * deltaY * 3 / getPlayer().mScreenHeight);
+            int deltaV = (int) (255 * deltaY * 3 / getScreenHeight());
             WindowManager.LayoutParams params = JZUtils.getWindow(getContext()).getAttributes();
             if (((mGestureDownBrightness + deltaV) / 255) >= 1) {//这和声音有区别，必须自己过滤一下负值
                 params.screenBrightness = 1;
@@ -110,7 +110,7 @@ public class BrightnessDialog extends JZDialog {
                 params.screenBrightness = (mGestureDownBrightness + deltaV) / 255;
             }
             JZUtils.getWindow(getContext()).setAttributes(params);
-            int brightnessPercent = (int) (mGestureDownBrightness * 100 / 255 + deltaY * 3 * 100 / getPlayer().mScreenHeight);
+            int brightnessPercent = (int) (mGestureDownBrightness * 100 / 255 + deltaY * 3 * 100 / getScreenHeight());
             this.brightnessPercent = brightnessPercent;
             show();
 //        mDownY = y;
