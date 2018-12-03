@@ -125,7 +125,8 @@ public class CustomMediaPlayerAssertFolder extends JZMediaInterface implements M
             @Override
             public void run() {
                 if (JZVideoPlayerManager.getCurrentJzvd() != null) {
-                    JZVideoPlayerManager.getCurrentJzvd().setBufferProgress(percent);
+                    //TODO FELIPE: RESOLVER ISSO AQUI
+//                    JZVideoPlayerManager.getCurrentJzvd().setBufferProgress(percent);
                 }
             }
         });
