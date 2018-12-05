@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-import cn.jzvd.DismissControlViewTimerTask;
+import cn.jzvd.task.DismissControlViewTimerTask;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZResizeTextureView;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.ProgressTimerTask;
+import cn.jzvd.task.ProgressTimerTask;
 import cn.jzvd.R;
 import cn.jzvd.dialog.JZDialogs;
 

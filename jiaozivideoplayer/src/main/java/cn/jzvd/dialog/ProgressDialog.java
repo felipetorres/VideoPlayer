@@ -12,7 +12,7 @@ import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.ProgressTimerTask;
+import cn.jzvd.task.ProgressTimerTask;
 import cn.jzvd.R;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;

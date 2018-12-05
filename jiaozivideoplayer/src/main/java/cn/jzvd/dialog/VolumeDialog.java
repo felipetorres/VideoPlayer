@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.ProgressTimerTask;
+import cn.jzvd.task.ProgressTimerTask;
 import cn.jzvd.R;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;

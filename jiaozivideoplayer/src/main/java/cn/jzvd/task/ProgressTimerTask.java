@@ -1,9 +1,11 @@
-package cn.jzvd;
+package cn.jzvd.task;
 
 import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.jzvd.JZVideoPlayerStandard;
 
 import static cn.jzvd.JZVideoPlayer.TAG;
 

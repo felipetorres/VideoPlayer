@@ -26,6 +26,8 @@ import java.util.Date;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.dialog.WifiDialog;
+import cn.jzvd.task.DismissControlViewTimerTask;
+import cn.jzvd.task.ProgressTimerTask;
 
 /**
  * Created by Nathen
