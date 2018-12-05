@@ -1,8 +1,6 @@
 package cn.jzvd.demo;
 
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -21,6 +19,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import cn.jzvd.JZAutoFullscreenListener;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
@@ -31,8 +30,6 @@ import cn.jzvd.JZVideoPlayerStandard;
 public class ActivityApi extends AppCompatActivity implements View.OnClickListener {
     Button mSmallChange, mBigChange, mOrientation, mExtendsNormalActivity, mRationAndVideoSize, mCustomMediaPlayer;
     JZVideoPlayerStandard mJzVideoPlayerStandard;
-    JZVideoPlayer.JZAutoFullscreenListener mSensorEventListener;
-    SensorManager mSensorManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,8 +87,7 @@ public class ActivityApi extends AppCompatActivity implements View.OnClickListen
 //                videoController1.thumbImageView);
         /** volley omit **/
         /** Fresco omit **/
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensorEventListener = new JZVideoPlayer.JZAutoFullscreenListener();
+        JZAutoFullscreenListener.register(this);
     }
 
     @Override
@@ -122,8 +118,6 @@ public class ActivityApi extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
-        Sensor accelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(mSensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         //home back
         JZVideoPlayer.goOnPlayOnResume();
     }
@@ -131,7 +125,7 @@ public class ActivityApi extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(mSensorEventListener);
+        JZAutoFullscreenListener.unregister();
         JZVideoPlayer.clearSavedProgress(this, null);
         //home back
         JZVideoPlayer.goOnPlayOnPause();

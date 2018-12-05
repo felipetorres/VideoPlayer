@@ -3,10 +3,6 @@ package cn.jzvd;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -44,7 +40,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = true;
     public static long CLICK_QUIT_FULLSCREEN_TIME = 0;
-    public static long lastAutoFullscreenTime = 0;
 
     protected static JZUserAction JZ_USER_EVENT;
 
@@ -610,16 +605,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         }
     }
 
-    public void autoQuitFullscreen() {
-        if ((System.currentTimeMillis() - lastAutoFullscreenTime) > 2000
-                && isCurrentPlay()
-                && stateMachine.currentStatePlaying()
-                && currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            lastAutoFullscreenTime = System.currentTimeMillis();
-            backPress();
-        }
-    }
-
     public void onEvent(int type) {
         if (JZ_USER_EVENT != null && isCurrentPlay() && dataSource != null) {
             JZ_USER_EVENT.onEvent(type, dataSource.getCurrentPath(currentUrlMapIndex), currentScreen, objects);
@@ -636,26 +621,4 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     }
 
     public abstract void onVideoSizeChanged();
-
-    public static class JZAutoFullscreenListener implements SensorEventListener {
-        @Override
-        public void onSensorChanged(SensorEvent event) {//可以得到传感器实时测量出来的变化值
-            final float x = event.values[SensorManager.DATA_X];
-            float y = event.values[SensorManager.DATA_Y];
-            float z = event.values[SensorManager.DATA_Z];
-            //过滤掉用力过猛会有一个反向的大数值
-            if (x < -12 || x > 12) {
-                if ((System.currentTimeMillis() - lastAutoFullscreenTime) > 2000) {
-                    if (JZVideoPlayerManager.getCurrentJzvd() != null) {
-                        JZVideoPlayerManager.getCurrentJzvd().autoFullscreen(x);
-                    }
-                    lastAutoFullscreenTime = System.currentTimeMillis();
-                }
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
-    }
 }

@@ -1,7 +1,5 @@
 package cn.jzvd.demo;
 
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import cn.jzvd.JZAutoFullscreenListener;
 import cn.jzvd.JZVideoPlayer;
 
 /**
@@ -16,9 +15,6 @@ import cn.jzvd.JZVideoPlayer;
  */
 public class ActivityListViewNormal extends AppCompatActivity {
     ListView listView;
-
-    SensorManager sensorManager;
-    JZVideoPlayer.JZAutoFullscreenListener sensorEventListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,8 +44,7 @@ public class ActivityListViewNormal extends AppCompatActivity {
             }
         });
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensorEventListener = new JZVideoPlayer.JZAutoFullscreenListener();
+        JZAutoFullscreenListener.register(this);
     }
 
     @Override
@@ -63,14 +58,12 @@ public class ActivityListViewNormal extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(sensorEventListener);
+        JZAutoFullscreenListener.unregister();
         JZVideoPlayer.releaseAllVideos();
     }
 
