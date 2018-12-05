@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
+import cn.jzvd.JZActionBarManager;
 import cn.jzvd.task.DismissControlViewTimerTask;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZResizeTextureView;
@@ -20,7 +21,6 @@ import cn.jzvd.dialog.JZDialogs;
 
 import static cn.jzvd.JZVideoPlayer.NORMAL_ORIENTATION;
 import static cn.jzvd.JZVideoPlayer.TAG;
-import static cn.jzvd.JZVideoPlayer.showSupportActionBar;
 
 public class TextureViewContainer extends JZComponent implements View.OnClickListener, View.OnTouchListener {
 
@@ -101,7 +101,7 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
         Context context = getPlayer().getContext();
 
         JZUtils.setRequestedOrientation(context, NORMAL_ORIENTATION);
-        showSupportActionBar(context);
+        JZActionBarManager.showSupportActionBar(context);
         ViewGroup vp = (JZUtils.scanForActivity(context))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
         JZVideoPlayerStandard fullJzvd = vp.findViewById(R.id.jz_fullscreen_id);

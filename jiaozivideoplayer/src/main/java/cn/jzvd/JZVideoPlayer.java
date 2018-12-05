@@ -1,9 +1,7 @@
 package cn.jzvd;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -34,8 +32,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public static final int SCREEN_WINDOW_TINY = 3;
 
     public static final String URL_KEY_DEFAULT = "URL_KEY_DEFAULT";//Key used when playing one address.
-    public static boolean ACTION_BAR_EXIST = true;
-    public static boolean TOOL_BAR_EXIST = true;
     public static int FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = true;
@@ -109,7 +105,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     }
 
     public static void startFullscreen(Context context, Class _class, JZDataSource dataSource, int defaultUrlMapIndex, Object... objects) {
-        hideSupportActionBar(context);
+        JZActionBarManager.hideSupportActionBar(context);
         JZUtils.setRequestedOrientation(context, FULLSCREEN_ORIENTATION);
         ViewGroup vp = (JZUtils.scanForActivity(context))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
@@ -173,35 +169,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     public void onQuitFullscreenOrTinyWindow() {
         JZVideoPlayerManager.setSecondFloor(null);
-    }
-
-    @SuppressLint("RestrictedApi")
-    public static void showSupportActionBar(Context context) {
-        if (ACTION_BAR_EXIST && JZUtils.getAppCompActivity(context) != null) {
-            ActionBar ab = JZUtils.getAppCompActivity(context).getSupportActionBar();
-            if (ab != null) {
-                ab.setShowHideAnimationEnabled(false);
-                ab.show();
-            }
-        }
-        if (TOOL_BAR_EXIST) {
-            JZUtils.getWindow(context).clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-    }
-
-    @SuppressLint("RestrictedApi")
-    public static void hideSupportActionBar(Context context) {
-        if (ACTION_BAR_EXIST && JZUtils.getAppCompActivity(context) != null) {
-            ActionBar ab = JZUtils.getAppCompActivity(context).getSupportActionBar();
-            if (ab != null) {
-                ab.setShowHideAnimationEnabled(false);
-                ab.hide();
-            }
-        }
-        if (TOOL_BAR_EXIST) {
-            JZUtils.getWindow(context).setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
     }
 
     public static void clearSavedProgress(Context context, String url) {
@@ -480,7 +447,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         if (oldT != null) {
             vp.removeView(oldT);
         }
-        showSupportActionBar(getContext());
+        JZActionBarManager.showSupportActionBar(getContext());
     }
 
     public long getCurrentPositionWhenPlaying() {
@@ -512,7 +479,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     public void startWindowFullscreen() {
         Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
-        hideSupportActionBar(getContext());
+        JZActionBarManager.hideSupportActionBar(getContext());
 
         ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
