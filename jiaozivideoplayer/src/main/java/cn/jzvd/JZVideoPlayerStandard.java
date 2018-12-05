@@ -1,9 +1,6 @@
 package cn.jzvd;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,9 +17,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import cn.jzvd.component.BatteryComponent;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.dialog.WifiDialog;
@@ -47,9 +42,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public TextView titleTextView;
     public ImageView thumbImageView;
     public ImageView tinyBackImageView;
-    public LinearLayout batteryTimeLayout;
-    public ImageView batteryLevel;
-    public TextView videoCurrentTime;
+
     public TextView replayTextView;
     public TextView clarity;
     public PopupWindow clarityPopWindow;
@@ -61,22 +54,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     private JZDialogs dialogs;
     private final WifiDialog wifiDialog = new WifiDialog(this);
 
-    public static long LAST_GET_BATTERYLEVEL_TIME = 0;
-    public static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
-
-    private BroadcastReceiver battertReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
-                int level = intent.getIntExtra("level", 0);
-                int scale = intent.getIntExtra("scale", 100);
-                int percent = level * 100 / scale;
-                LAST_GET_BATTERYLEVEL_PERCENT = percent;
-                setBatteryLevel();
-                getContext().unregisterReceiver(battertReceiver);
-            }
-        }
-    };
+    private BatteryComponent batteryComponent;
 
     public JZVideoPlayerStandard(Context context) {
         super(context);
@@ -93,6 +71,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         this.dialogs = new JZDialogs(this);
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
+        batteryComponent = new BatteryComponent(this);
+
         startButton = findViewById(R.id.start);
         fullscreenButton = findViewById(R.id.fullscreen);
         progressBar = findViewById(R.id.bottom_seek_progress);
@@ -106,16 +86,12 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         progressBar.setOnSeekBarChangeListener(this);
         bottomContainer.setOnClickListener(this);
 
-
-        batteryTimeLayout = findViewById(R.id.battery_time_layout);
         bottomProgressBar = findViewById(R.id.bottom_progress);
         titleTextView = findViewById(R.id.title);
         backButton = findViewById(R.id.back);
         thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
         tinyBackImageView = findViewById(R.id.back_tiny);
-        batteryLevel = findViewById(R.id.battery_level);
-        videoCurrentTime = findViewById(R.id.video_current_time);
         replayTextView = findViewById(R.id.replay_text);
         clarity = findViewById(R.id.clarity);
         mRetryBtn = findViewById(R.id.retry_btn);
@@ -131,11 +107,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
         super.setUp(dataSource, defaultUrlMapIndex, screen, objects);
         if (objects.length != 0) titleTextView.setText(objects[0].toString());
+
+        batteryComponent.setUp(dataSource, defaultUrlMapIndex, screen, objects);
+
+
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             fullscreenButton.setImageResource(R.drawable.jz_shrink);
             backButton.setVisibility(View.VISIBLE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
-            batteryTimeLayout.setVisibility(View.VISIBLE);
             if (dataSource.getMap().size() == 1) {
                 clarity.setVisibility(GONE);
             } else {
@@ -150,17 +129,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             backButton.setVisibility(View.GONE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
-            batteryTimeLayout.setVisibility(View.GONE);
             clarity.setVisibility(View.GONE);
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
             tinyBackImageView.setVisibility(View.VISIBLE);
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
-            batteryTimeLayout.setVisibility(View.GONE);
             clarity.setVisibility(View.GONE);
             textureViewContainer.addTextureView();
         }
-        setSystemTimeAndBattery();
 
 
         if (tmp_test_back) {
@@ -429,15 +405,15 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void onClickUiToggle() {
+        batteryComponent.onClickUiToggle();
+
         if (bottomContainer.getVisibility() != View.VISIBLE) {
-            setSystemTimeAndBattery();
             clarity.setText(dataSource.getKey(currentUrlMapIndex));
         }
         if (getStateMachine().currentStatePreparing()) {
             changeUiToPreparing();
             if (bottomContainer.getVisibility() == View.VISIBLE) {
             } else {
-                setSystemTimeAndBattery();
             }
         } else if (getStateMachine().currentStatePlaying()) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
@@ -451,38 +427,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             } else {
                 changeUiToPauseShow();
             }
-        }
-    }
-
-    private void setSystemTimeAndBattery() {
-        SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        videoCurrentTime.setText(dateFormater.format(date));
-        if ((System.currentTimeMillis() - LAST_GET_BATTERYLEVEL_TIME) > 30000) {
-            LAST_GET_BATTERYLEVEL_TIME = System.currentTimeMillis();
-            getContext().registerReceiver(
-                    battertReceiver,
-                    new IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            );
-        } else {
-            setBatteryLevel();
-        }
-    }
-
-    private void setBatteryLevel() {
-        int percent = LAST_GET_BATTERYLEVEL_PERCENT;
-        if (percent < 15) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_10);
-        } else if (percent < 40) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_30);
-        } else if (percent < 60) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_50);
-        } else if (percent < 80) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_70);
-        } else if (percent < 95) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_90);
-        } else if (percent <= 100) {
-            batteryLevel.setBackgroundResource(R.drawable.jz_battery_level_100);
         }
     }
 
