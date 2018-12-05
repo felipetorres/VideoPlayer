@@ -1,11 +1,11 @@
 package cn.jzvd.demo.CustomView;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.WindowManager;
 
+import cn.jzvd.JZAudioManager;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayerStandard;
@@ -28,8 +28,7 @@ public class JZVideoPlayerStandardAutoCompleteAfterFullscreen extends JZVideoPla
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
             textureViewContainer.initTextureView();
-            AudioManager mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            JZAudioManager.getInstance(this).requestAudioFocus();
             JZUtils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             JZMediaManager.setDataSource(dataSource);
@@ -44,7 +43,7 @@ public class JZVideoPlayerStandardAutoCompleteAfterFullscreen extends JZVideoPla
     @Override
     public void onAutoCompletion() {
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            onStateAutoComplete();
+            getStateMachine().setAutoComplete();
         } else {
             super.onAutoCompletion();
         }

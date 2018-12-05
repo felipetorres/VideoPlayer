@@ -11,11 +11,6 @@ import android.view.WindowManager;
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_AUTO_COMPLETE;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PAUSE;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PLAYING;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PREPARING;
-
 public abstract class JZDialog {
 
     static final int THRESHOLD = 80;
@@ -67,22 +62,22 @@ public abstract class JZDialog {
     }
 
     void onClickUiToggleToClear() {
-        if (player.currentState == CURRENT_STATE_PREPARING) {
+        if (player.getStateMachine().currentStatePreparing()) {
             if (player.bottomContainer.getVisibility() == View.VISIBLE) {
                 player.changeUiToPreparing();
             } else {
             }
-        } else if (player.currentState == CURRENT_STATE_PLAYING) {
+        } else if (player.getStateMachine().currentStatePlaying()) {
             if (player.bottomContainer.getVisibility() == View.VISIBLE) {
                 player.changeUiToPlayingClear();
             } else {
             }
-        } else if (player.currentState == CURRENT_STATE_PAUSE) {
+        } else if (player.getStateMachine().currentStatePause()) {
             if (player.bottomContainer.getVisibility() == View.VISIBLE) {
                 player.changeUiToPauseClear();
             } else {
             }
-        } else if (player.currentState == CURRENT_STATE_AUTO_COMPLETE) {
+        } else if (player.getStateMachine().currentStateAutoComplete()) {
             if (player.bottomContainer.getVisibility() == View.VISIBLE) {
                 player.changeUiToComplete();
             } else {

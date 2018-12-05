@@ -156,7 +156,6 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
         if(time != previousSeek) {
             simpleExoPlayer.seekTo(time);
             previousSeek = time;
-            JZVideoPlayerManager.getCurrentJzvd().seekToInAdvance = time;
         }
     }
 

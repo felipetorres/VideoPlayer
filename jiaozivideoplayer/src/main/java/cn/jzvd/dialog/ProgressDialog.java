@@ -15,7 +15,6 @@ import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.ProgressTimerTask;
 import cn.jzvd.R;
 
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_ERROR;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
 public class ProgressDialog extends JZDialog {
@@ -97,7 +96,7 @@ public class ProgressDialog extends JZDialog {
             ProgressTimerTask.finish();
 
             if (absDeltaX >= THRESHOLD) {
-                if (getPlayer().currentState != CURRENT_STATE_ERROR) {
+                if (!getPlayer().getStateMachine().currentStateError()) {
                     mChangePosition = true;
                     mGestureDownPosition = getPlayer().getCurrentPositionWhenPlaying();
                 }

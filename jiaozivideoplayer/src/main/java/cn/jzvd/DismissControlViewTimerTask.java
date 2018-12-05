@@ -5,9 +5,6 @@ import android.view.View;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_AUTO_COMPLETE;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_ERROR;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_NORMAL;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
 public class DismissControlViewTimerTask extends TimerTask {
@@ -39,9 +36,9 @@ public class DismissControlViewTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        if (player.currentState != CURRENT_STATE_NORMAL
-                && player.currentState != CURRENT_STATE_ERROR
-                && player.currentState != CURRENT_STATE_AUTO_COMPLETE) {
+        if (!player.getStateMachine().currentStateNormal()
+                && !player.getStateMachine().currentStateError()
+                && !player.getStateMachine().currentStateAutoComplete()) {
             player.post(new Runnable() {
                 @Override
                 public void run() {

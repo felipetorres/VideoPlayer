@@ -197,8 +197,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     @Override
-    public void onStatePreparingChangingUrl(int urlMapIndex, long seekToInAdvance) {
-        super.onStatePreparingChangingUrl(urlMapIndex, seekToInAdvance);
+    public void onStatePreparingChangingUrl(int urlMapIndex) {
+        super.onStatePreparingChangingUrl(urlMapIndex);
         loadingProgressBar.setVisibility(VISIBLE);
         startButton.setVisibility(INVISIBLE);
     }
@@ -264,7 +264,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (currentState == CURRENT_STATE_NORMAL) {
+            if (getStateMachine().currentStateNormal()) {
                 if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") && !
                         dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
                         !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
@@ -273,22 +273,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 }
                 startVideo();
                 onEvent(JZUserAction.ON_CLICK_START_ICON);
-            } else if (currentState == CURRENT_STATE_PLAYING) {
+            } else if (getStateMachine().currentStatePlaying()) {
                 onEvent(JZUserAction.ON_CLICK_PAUSE);
                 Log.d(TAG, "pauseVideo [" + this.hashCode() + "] ");
-                JZMediaManager.pause();
-                onStatePause();
-            } else if (currentState == CURRENT_STATE_PAUSE) {
+                getStateMachine().setPause();
+            } else if (getStateMachine().currentStatePause()) {
                 onEvent(JZUserAction.ON_CLICK_RESUME);
-                JZMediaManager.start();
-                onStatePlaying();
-            } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
+                getStateMachine().setPlaying();
+            } else if (getStateMachine().currentStateAutoComplete()) {
                 onEvent(JZUserAction.ON_CLICK_START_AUTO_COMPLETE);
                 startVideo();
             }
         } else if (i == R.id.fullscreen) {
             Log.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
-            if (currentState == CURRENT_STATE_AUTO_COMPLETE) return;
+            if (getStateMachine().currentStateAutoComplete()) return;
             if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
                 //quit fullscreen
                 backPress();
@@ -302,7 +300,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (currentState == CURRENT_STATE_NORMAL) {
+            if (getStateMachine().currentStateNormal()) {
                 if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") &&
                         !dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
                         !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
@@ -311,7 +309,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 }
                 onEvent(JZUserActionStandard.ON_CLICK_START_THUMB);
                 startVideo();
-            } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
+            } else if (getStateMachine().currentStateAutoComplete()) {
                 onClickUiToggle();
             }
         } else if (i == R.id.back) {
@@ -330,7 +328,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             OnClickListener mQualityListener = new OnClickListener() {
                 public void onClick(View v) {
                     int index = (int) v.getTag();
-                    onStatePreparingChangingUrl(index, getCurrentPositionWhenPlaying());
+                    getStateMachine().setPreparingChangingUrl(index, getCurrentPositionWhenPlaying());
                     clarity.setText(dataSource.getKey(currentUrlMapIndex));
                     for (int j = 0; j < layout.getChildCount(); j++) {//设置点击之后的颜色
                         if (j == currentUrlMapIndex) {
@@ -378,7 +376,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             textureViewContainer.initTextureView();//和开始播放的代码重复
             JZMediaManager.setDataSource(dataSource);
             JZMediaManager.setCurrentPath(dataSource.getCurrentPath(currentUrlMapIndex));
-            onStatePreparing();
+            getStateMachine().setPreparing();
             onEvent(JZUserAction.ON_CLICK_START_ERROR);
         }
     }
@@ -414,15 +412,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             vpup.requestDisallowInterceptTouchEvent(false);
             vpup = vpup.getParent();
         }
-        if (currentState != CURRENT_STATE_PLAYING &&
-                currentState != CURRENT_STATE_PAUSE) return;
+        if (!getStateMachine().currentStatePlaying() && !getStateMachine().currentStatePause()) return;
 
         long time = seekBar.getProgress() * getDuration() / 100;
         JZMediaManager.seekTo(time);
         Log.i(TAG, "seekTo " + time + " [" + this.hashCode() + "] ");
 
         ProgressTimerTask.start(this);
-        if (currentState == CURRENT_STATE_PLAYING) {
+        if (getStateMachine().currentStatePlaying()) {
             DismissControlViewTimerTask.oneShot();
         } else {
             DismissControlViewTimerTask.start(this);
@@ -434,19 +431,19 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             setSystemTimeAndBattery();
             clarity.setText(dataSource.getKey(currentUrlMapIndex));
         }
-        if (currentState == CURRENT_STATE_PREPARING) {
+        if (getStateMachine().currentStatePreparing()) {
             changeUiToPreparing();
             if (bottomContainer.getVisibility() == View.VISIBLE) {
             } else {
                 setSystemTimeAndBattery();
             }
-        } else if (currentState == CURRENT_STATE_PLAYING) {
+        } else if (getStateMachine().currentStatePlaying()) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPlayingClear();
             } else {
                 changeUiToPlayingShow();
             }
-        } else if (currentState == CURRENT_STATE_PAUSE) {
+        } else if (getStateMachine().currentStatePause()) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPauseClear();
             } else {
@@ -671,14 +668,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void updateStartImage() {
-        if (currentState == CURRENT_STATE_PLAYING) {
+        if (getStateMachine().currentStatePlaying()) {
             startButton.setVisibility(VISIBLE);
             startButton.setImageResource(R.drawable.jz_click_pause_selector);
             replayTextView.setVisibility(INVISIBLE);
-        } else if (currentState == CURRENT_STATE_ERROR) {
+        } else if (getStateMachine().currentStateError()) {
             startButton.setVisibility(INVISIBLE);
             replayTextView.setVisibility(INVISIBLE);
-        } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
+        } else if (getStateMachine().currentStateAutoComplete()) {
             startButton.setVisibility(VISIBLE);
             startButton.setImageResource(R.drawable.jz_click_replay_selector);
             replayTextView.setVisibility(VISIBLE);

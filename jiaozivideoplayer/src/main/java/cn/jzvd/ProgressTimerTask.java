@@ -5,8 +5,6 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PAUSE;
-import static cn.jzvd.JZVideoPlayer.CURRENT_STATE_PLAYING;
 import static cn.jzvd.JZVideoPlayer.TAG;
 
 public class ProgressTimerTask extends TimerTask {
@@ -39,7 +37,7 @@ public class ProgressTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        if (player.currentState == CURRENT_STATE_PLAYING || player.currentState == CURRENT_STATE_PAUSE) {
+        if (player.getStateMachine().currentStatePlaying() || player.getStateMachine().currentStatePause()) {
 //                Log.v(TAG, "onProgressUpdate " + "[" + this.hashCode() + "] ");
             player.post(new Runnable() {
                 @Override
