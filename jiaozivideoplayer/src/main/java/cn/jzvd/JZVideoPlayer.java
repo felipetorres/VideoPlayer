@@ -2,6 +2,7 @@ package cn.jzvd;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -107,29 +108,37 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     public static void startFullscreen(Context context, Class _class, JZDataSource dataSource, int defaultUrlMapIndex, Object... objects) {
         JZActionBarManager.hideSupportActionBar(context);
         JZUtils.setRequestedOrientation(context, FULLSCREEN_ORIENTATION);
-        ViewGroup vp = (JZUtils.scanForActivity(context))//.getWindow().getDecorView();
-                .findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(R.id.jz_fullscreen_id);
-        if (old != null) {
-            vp.removeView(old);
-        }
-        try {
-            Constructor<JZVideoPlayer> constructor = _class.getConstructor(Context.class);
-            final JZVideoPlayer jzVideoPlayer = constructor.newInstance(context);
-            jzVideoPlayer.setId(R.id.jz_fullscreen_id);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            vp.addView(jzVideoPlayer, lp);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        JZVideoPlayer jzVideoPlayer = newInstanceFrom(context, _class, R.id.jz_fullscreen_id, params);
+
+        if(jzVideoPlayer != null) {
 //            final Animation ra = AnimationUtils.loadAnimation(context, R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             jzVideoPlayer.setUp(dataSource, defaultUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
             //TODO FELIPE: RESOLVER ISSO AQUI
 //            jzVideoPlayer.startButton.performClick();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+        }
+    }
+
+    private static JZVideoPlayer newInstanceFrom(Context context, Class _class, @IdRes int id, FrameLayout.LayoutParams lp) {
+        ViewGroup vp = (JZUtils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
+        View old = vp.findViewById(id);
+        if (old != null) {
+            vp.removeView(old);
+        }
+
+        try {
+            Constructor<JZVideoPlayer> constructor = _class.getConstructor(Context.class);
+            JZVideoPlayer jzVideoPlayer = constructor.newInstance(context);
+            jzVideoPlayer.setId(id);
+            vp.addView(jzVideoPlayer, lp);
+            return jzVideoPlayer;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -481,19 +490,11 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
         JZActionBarManager.hideSupportActionBar(getContext());
 
-        ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
-                .findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(R.id.jz_fullscreen_id);
-        if (old != null) {
-            vp.removeView(old);
-        }
-        try {
-            Constructor<JZVideoPlayer> constructor = (Constructor<JZVideoPlayer>) JZVideoPlayer.this.getClass().getConstructor(Context.class);
-            JZVideoPlayer jzVideoPlayer = constructor.newInstance(getContext());
-            jzVideoPlayer.setId(R.id.jz_fullscreen_id);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            vp.addView(jzVideoPlayer, lp);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        JZVideoPlayer jzVideoPlayer = newInstanceFrom(getContext(), JZVideoPlayer.this.getClass(), R.id.jz_fullscreen_id, params);
+
+        if (jzVideoPlayer != null) {
             jzVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
             jzVideoPlayer.setUp(dataSource, currentUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
@@ -509,8 +510,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 //            jzVideoPlayer.progressBar.setSecondaryProgress(progressBar.getSecondaryProgress());
 //            jzVideoPlayer.progressTimerTask.start();
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -521,28 +520,16 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
                 || stateMachine.currentStateError()
                 || stateMachine.currentStateAutoComplete())
             return;
-        ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
-                .findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(R.id.jz_tiny_id);
-        if (old != null) {
-            vp.removeView(old);
-        }
 
-        try {
-            Constructor<JZVideoPlayer> constructor = (Constructor<JZVideoPlayer>) JZVideoPlayer.this.getClass().getConstructor(Context.class);
-            JZVideoPlayer jzVideoPlayer = constructor.newInstance(getContext());
-            jzVideoPlayer.setId(R.id.jz_tiny_id);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(400, 400);
-            lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-            vp.addView(jzVideoPlayer, lp);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(400, 400);
+        params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        JZVideoPlayer jzVideoPlayer = newInstanceFrom(getContext(), JZVideoPlayer.this.getClass(), R.id.jz_tiny_id, params);
+
+        if (jzVideoPlayer != null) {
             jzVideoPlayer.setUp(dataSource, currentUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_TINY, objects);
             jzVideoPlayer.stateMachine.copyStateFrom(this);
             JZVideoPlayerManager.setSecondFloor(jzVideoPlayer);
             getStateMachine().setNormal();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
