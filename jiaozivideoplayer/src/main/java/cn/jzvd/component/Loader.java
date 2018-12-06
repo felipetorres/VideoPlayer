@@ -14,13 +14,14 @@ public class Loader {
 
     public Loader(JZVideoPlayerStandard player) {
         register(new BatteryComponent(player),
-                new TitleComponent(player),
-                new FullscreenComponent(player),
-                new TinyBackButton(player),
-                new BackButtonComponent(player),
-                new ClarityComponent(player));
+                 new TitleComponent(player),
+                 new FullscreenComponent(player),
+                 new TinyBackButton(player),
+                 new BackButtonComponent(player),
+                 new ClarityComponent(player));
 
-        registerControl(new ThumbComponent(player));
+        registerControl(new ThumbComponent(player),
+                        new RetryComponent(player));
     }
 
     public void register(JZUIComponent... components) {
