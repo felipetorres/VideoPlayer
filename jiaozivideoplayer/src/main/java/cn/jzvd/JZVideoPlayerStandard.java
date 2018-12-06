@@ -41,7 +41,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public ProgressBar bottomProgressBar, loadingProgressBar;
 
     public ImageView thumbImageView;
-    public ImageView tinyBackImageView;
 
     public TextView replayTextView;
     public TextView clarity;
@@ -86,7 +85,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         backButton = findViewById(R.id.back);
         thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
-        tinyBackImageView = findViewById(R.id.back_tiny);
         replayTextView = findViewById(R.id.replay_text);
         clarity = findViewById(R.id.clarity);
         mRetryBtn = findViewById(R.id.retry_btn);
@@ -94,7 +92,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
         thumbImageView.setOnClickListener(this);
         backButton.setOnClickListener(this);
-        tinyBackImageView.setOnClickListener(this);
+
         clarity.setOnClickListener(this);
         mRetryBtn.setOnClickListener(this);
     }
@@ -108,7 +106,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             backButton.setVisibility(View.VISIBLE);
-            tinyBackImageView.setVisibility(View.INVISIBLE);
+
             if (dataSource.getMap().size() == 1) {
                 clarity.setVisibility(GONE);
             } else {
@@ -120,11 +118,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
             backButton.setVisibility(View.GONE);
-            tinyBackImageView.setVisibility(View.INVISIBLE);
+
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
             clarity.setVisibility(View.GONE);
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
-            tinyBackImageView.setVisibility(View.VISIBLE);
+
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
             clarity.setVisibility(View.GONE);
@@ -274,12 +272,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             }
         } else if (i == R.id.back) {
             backPress();
-        } else if (i == R.id.back_tiny) {
-            if (JZVideoPlayerManager.getFirstFloor().currentScreen == JZVideoPlayer.SCREEN_WINDOW_LIST) {
-                quitFullscreenOrTinyWindow();
-            } else {
-                backPress();
-            }
         } else if (i == R.id.clarity) {
             LayoutInflater inflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

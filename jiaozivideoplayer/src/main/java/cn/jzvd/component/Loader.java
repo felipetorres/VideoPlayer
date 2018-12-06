@@ -14,7 +14,8 @@ public class Loader {
     public Loader(JZVideoPlayerStandard player) {
         register(new BatteryComponent(player),
                  new TitleComponent(player),
-                 new FullscreenComponent(player));
+                 new FullscreenComponent(player),
+                 new TinyBackButton(player));
     }
 
     public void register(JZUIComponent... components) {
