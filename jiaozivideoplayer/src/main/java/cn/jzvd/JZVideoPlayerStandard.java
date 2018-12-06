@@ -37,7 +37,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public ViewGroup topContainer, bottomContainer;
     public TextureViewContainer textureViewContainer;
 
-    public ImageView backButton;
+
     public ProgressBar bottomProgressBar, loadingProgressBar;
 
     public ImageView thumbImageView;
@@ -82,7 +82,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomContainer.setOnClickListener(this);
 
         bottomProgressBar = findViewById(R.id.bottom_progress);
-        backButton = findViewById(R.id.back);
         thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
         replayTextView = findViewById(R.id.replay_text);
@@ -91,7 +90,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         mRetryLayout = findViewById(R.id.retry_layout);
 
         thumbImageView.setOnClickListener(this);
-        backButton.setOnClickListener(this);
 
         clarity.setOnClickListener(this);
         mRetryBtn.setOnClickListener(this);
@@ -105,8 +103,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            backButton.setVisibility(View.VISIBLE);
-
             if (dataSource.getMap().size() == 1) {
                 clarity.setVisibility(GONE);
             } else {
@@ -117,8 +113,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
-            backButton.setVisibility(View.GONE);
-
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
             clarity.setVisibility(View.GONE);
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
@@ -270,8 +264,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             } else if (getStateMachine().currentStateAutoComplete()) {
                 onClickUiToggle();
             }
-        } else if (i == R.id.back) {
-            backPress();
         } else if (i == R.id.clarity) {
             LayoutInflater inflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -29,23 +29,17 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
     public void init(Context context) {
         super.init(context);
         bottomProgressBar = findViewById(R.id.bottom_progress);
-        backButton = findViewById(R.id.back);
 //        thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
 
 //        thumbImageView.setOnClickListener(this);
-        backButton.setOnClickListener(this);
     }
 
     @Override
     public void setUp(String url, int screen, Object... objects) {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
-        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            backButton.setVisibility(View.VISIBLE);
-        } else if (currentScreen == SCREEN_WINDOW_LIST) {
-            backButton.setVisibility(View.GONE);
-        } else if (currentScreen == SCREEN_WINDOW_TINY) {
+        if (currentScreen == SCREEN_WINDOW_TINY) {
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,View.INVISIBLE);
         }
