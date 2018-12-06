@@ -1,17 +1,14 @@
 package cn.jzvd;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -43,8 +40,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public ImageView thumbImageView;
 
     public TextView replayTextView;
-    public TextView clarity;
-    public PopupWindow clarityPopWindow;
+
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
@@ -85,13 +81,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
         replayTextView = findViewById(R.id.replay_text);
-        clarity = findViewById(R.id.clarity);
         mRetryBtn = findViewById(R.id.retry_btn);
         mRetryLayout = findViewById(R.id.retry_layout);
 
         thumbImageView.setOnClickListener(this);
 
-        clarity.setOnClickListener(this);
         mRetryBtn.setOnClickListener(this);
     }
 
@@ -103,23 +97,14 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            if (dataSource.getMap().size() == 1) {
-                clarity.setVisibility(GONE);
-            } else {
-                clarity.setText(dataSource.getKey(currentUrlMapIndex));
-                clarity.setVisibility(View.VISIBLE);
-            }
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_fullscreen));
             textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
-            clarity.setVisibility(View.GONE);
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
-
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
-            clarity.setVisibility(View.GONE);
             textureViewContainer.addTextureView();
         }
 
@@ -264,48 +249,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             } else if (getStateMachine().currentStateAutoComplete()) {
                 onClickUiToggle();
             }
-        } else if (i == R.id.clarity) {
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.jz_layout_clarity, null);
-
-            OnClickListener mQualityListener = new OnClickListener() {
-                public void onClick(View v) {
-                    int index = (int) v.getTag();
-                    getStateMachine().setPreparingChangingUrl(index, getCurrentPositionWhenPlaying());
-                    clarity.setText(dataSource.getKey(currentUrlMapIndex));
-                    for (int j = 0; j < layout.getChildCount(); j++) {//设置点击之后的颜色
-                        if (j == currentUrlMapIndex) {
-                            ((TextView) layout.getChildAt(j)).setTextColor(Color.parseColor("#fff85959"));
-                        } else {
-                            ((TextView) layout.getChildAt(j)).setTextColor(Color.parseColor("#ffffff"));
-                        }
-                    }
-                    if (clarityPopWindow != null) {
-                        clarityPopWindow.dismiss();
-                    }
-                }
-            };
-
-            for (int j = 0; j < dataSource.getMap().size(); j++) {
-                String key = dataSource.getKey(j);
-                TextView clarityItem = (TextView) View.inflate(getContext(), R.layout.jz_layout_clarity_item, null);
-                clarityItem.setText(key);
-                clarityItem.setTag(j);
-                layout.addView(clarityItem, j);
-                clarityItem.setOnClickListener(mQualityListener);
-                if (j == currentUrlMapIndex) {
-                    clarityItem.setTextColor(Color.parseColor("#fff85959"));
-                }
-            }
-
-            clarityPopWindow = new PopupWindow(layout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
-            clarityPopWindow.setContentView(layout);
-            clarityPopWindow.showAsDropDown(clarity);
-            layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            int offsetX = clarity.getMeasuredWidth() / 3;
-            int offsetY = clarity.getMeasuredHeight() / 3;
-            clarityPopWindow.update(clarity, -offsetX, -offsetY, Math.round(layout.getMeasuredWidth() * 2), layout.getMeasuredHeight());
         } else if (i == R.id.retry_btn) {
             if (dataSource == null || dataSource.getCurrentPath(currentUrlMapIndex) == null) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
@@ -375,9 +318,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             component.onClickUiToggle();
         }
 
-        if (bottomContainer.getVisibility() != View.VISIBLE) {
-            clarity.setText(dataSource.getKey(currentUrlMapIndex));
-        }
         if (getStateMachine().currentStatePreparing()) {
             changeUiToPreparing();
             if (bottomContainer.getVisibility() == View.VISIBLE) {
@@ -614,8 +554,12 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         ProgressTimerTask.finish();
         DismissControlViewTimerTask.finish();
 
-        if (clarityPopWindow != null) {
-            clarityPopWindow.dismiss();
+        dismissRegisteredComponents();
+    }
+
+    public void dismissRegisteredComponents() {
+        for (JZUIComponent component : loader.getRegisteredComponents()) {
+            component.onCompletion();
         }
     }
 

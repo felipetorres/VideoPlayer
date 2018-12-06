@@ -16,7 +16,8 @@ public class Loader {
                  new TitleComponent(player),
                  new FullscreenComponent(player),
                  new TinyBackButton(player),
-                 new BackButtonComponent(player));
+                 new BackButtonComponent(player),
+                 new ClarityComponent(player));
     }
 
     public void register(JZUIComponent... components) {

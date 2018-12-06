@@ -47,9 +47,7 @@ public class DismissControlViewTimerTask extends TimerTask {
                     player.bottomContainer.setVisibility(View.INVISIBLE);
                     player.topContainer.setVisibility(View.INVISIBLE);
                     player.startButton.setVisibility(View.INVISIBLE);
-                    if (player.clarityPopWindow != null) {
-                        player.clarityPopWindow.dismiss();
-                    }
+                    player.dismissRegisteredComponents();
                     if (player.currentScreen != SCREEN_WINDOW_TINY) {
                         player.bottomProgressBar.setVisibility(View.VISIBLE);
                     }

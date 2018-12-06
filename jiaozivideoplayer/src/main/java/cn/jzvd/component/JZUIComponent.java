@@ -25,4 +25,6 @@ public abstract class JZUIComponent {
     abstract public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects);
 
     public void onClickUiToggle() { }
+
+    public void onCompletion() { }
 }
