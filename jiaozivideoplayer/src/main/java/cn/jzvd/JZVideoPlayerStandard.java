@@ -17,7 +17,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.jzvd.component.BatteryComponent;
+import cn.jzvd.component.JZUIComponent;
+import cn.jzvd.component.Loader;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.dialog.WifiDialog;
@@ -39,7 +40,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     public ImageView backButton;
     public ProgressBar bottomProgressBar, loadingProgressBar;
-    public TextView titleTextView;
+
     public ImageView thumbImageView;
     public ImageView tinyBackImageView;
 
@@ -53,8 +54,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     private JZDialogs dialogs;
     private final WifiDialog wifiDialog = new WifiDialog(this);
-
-    private BatteryComponent batteryComponent;
+    protected Loader loader;
 
     public JZVideoPlayerStandard(Context context) {
         super(context);
@@ -68,10 +68,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void init(Context context) {
         super.init(context);
 
+        this.loader = new Loader(this);
         this.dialogs = new JZDialogs(this);
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
-
-        batteryComponent = new BatteryComponent(this);
 
         startButton = findViewById(R.id.start);
         fullscreenButton = findViewById(R.id.fullscreen);
@@ -87,7 +86,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomContainer.setOnClickListener(this);
 
         bottomProgressBar = findViewById(R.id.bottom_progress);
-        titleTextView = findViewById(R.id.title);
         backButton = findViewById(R.id.back);
         thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
@@ -106,10 +104,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
         super.setUp(dataSource, defaultUrlMapIndex, screen, objects);
-        if (objects.length != 0) titleTextView.setText(objects[0].toString());
 
-        batteryComponent.setUp(dataSource, defaultUrlMapIndex, screen, objects);
-
+        for (JZUIComponent component : loader.getRegisteredComponents()) {
+            component.setUp(dataSource, defaultUrlMapIndex, screen, objects);
+        }
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             fullscreenButton.setImageResource(R.drawable.jz_shrink);
@@ -405,7 +403,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void onClickUiToggle() {
-        batteryComponent.onClickUiToggle();
+        for (JZUIComponent component : loader.getRegisteredComponents()) {
+            component.onClickUiToggle();
+        }
 
         if (bottomContainer.getVisibility() != View.VISIBLE) {
             clarity.setText(dataSource.getKey(currentUrlMapIndex));

@@ -29,7 +29,6 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
     public void init(Context context) {
         super.init(context);
         bottomProgressBar = findViewById(R.id.bottom_progress);
-        titleTextView = findViewById(R.id.title);
         backButton = findViewById(R.id.back);
 //        thumbImageView = findViewById(R.id.thumb);
         loadingProgressBar = findViewById(R.id.loading);
@@ -45,7 +44,6 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
     public void setUp(String url, int screen, Object... objects) {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
-        titleTextView.setText(objects[0].toString());
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             fullscreenButton.setImageResource(R.drawable.jz_shrink);
             backButton.setVisibility(View.VISIBLE);

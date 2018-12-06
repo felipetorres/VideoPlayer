@@ -4,7 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.component.TitleComponent;
+
+import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
 /**
  * Created by Nathen
@@ -20,9 +24,22 @@ public class JZVideoPlayerStandardShowTitleAfterFullscreen extends JZVideoPlayer
     }
 
     @Override
-    public void setUp(String url, int screen, Object... objects) {
-        super.setUp(url, screen, objects);
-        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
+    public void init(Context context) {
+        super.init(context);
+        super.loader.register(new CustomTitleComponent(this));
+    }
+}
+
+class CustomTitleComponent extends TitleComponent {
+
+    CustomTitleComponent(JZVideoPlayerStandard player) {
+        super(player);
+    }
+
+    @Override
+    public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
+        super.setUp(dataSource, defaultUrlMapIndex, screen, objects);
+        if (player.currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             titleTextView.setVisibility(View.VISIBLE);
         } else {
             titleTextView.setVisibility(View.INVISIBLE);

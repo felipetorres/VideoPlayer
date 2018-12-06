@@ -19,13 +19,10 @@ import cn.jzvd.R;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
-public class BatteryComponent {
+public class BatteryComponent extends JZUIComponent {
 
     private static long LAST_GET_BATTERYLEVEL_TIME = 0;
     private static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
-
-    private Context context;
-    private JZVideoPlayerStandard player;
 
     private LinearLayout batteryTimeLayout;
     private TextView videoCurrentTime;
@@ -46,17 +43,23 @@ public class BatteryComponent {
     };
 
     public BatteryComponent(JZVideoPlayerStandard player) {
-        this.player = player;
-        init(player);
+        super(player);
     }
 
-    private void init(FrameLayout frameLayout) {
-        this.context = frameLayout.getContext();
+    @Override
+    protected void init(FrameLayout frameLayout) {
+        super.init(frameLayout);
         batteryTimeLayout = frameLayout.findViewById(R.id.battery_time_layout);
         videoCurrentTime = frameLayout.findViewById(R.id.video_current_time);
         batteryLevel = frameLayout.findViewById(R.id.battery_level);
     }
 
+    @Override
+    public String getName() {
+        return BatteryComponent.class.getSimpleName();
+    }
+
+    @Override
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
         if(screen == SCREEN_WINDOW_FULLSCREEN) {
             batteryTimeLayout.setVisibility(View.VISIBLE);
@@ -66,6 +69,7 @@ public class BatteryComponent {
         setSystemTimeAndBattery();
     }
 
+    @Override
     public void onClickUiToggle() {
         if (player.bottomContainer.getVisibility() != View.VISIBLE) {
             setSystemTimeAndBattery();
