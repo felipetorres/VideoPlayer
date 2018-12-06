@@ -12,7 +12,9 @@ public class Loader {
     private Map<String, JZUIComponent> registeredComponents = new HashMap<>();
 
     public Loader(JZVideoPlayerStandard player) {
-        register(new BatteryComponent(player), new TitleComponent(player));
+        register(new BatteryComponent(player),
+                 new TitleComponent(player),
+                 new FullscreenComponent(player));
     }
 
     public void register(JZUIComponent... components) {

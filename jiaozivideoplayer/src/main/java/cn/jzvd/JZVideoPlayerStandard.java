@@ -33,7 +33,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     public ImageView startButton;
     public SeekBar progressBar;
-    protected ImageView fullscreenButton;
     private TextView currentTimeTextView, totalTimeTextView;
     public ViewGroup topContainer, bottomContainer;
     public TextureViewContainer textureViewContainer;
@@ -73,7 +72,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
         startButton = findViewById(R.id.start);
-        fullscreenButton = findViewById(R.id.fullscreen);
         progressBar = findViewById(R.id.bottom_seek_progress);
         currentTimeTextView = findViewById(R.id.current);
         totalTimeTextView = findViewById(R.id.total);
@@ -81,7 +79,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         topContainer = findViewById(R.id.layout_top);
 
         startButton.setOnClickListener(this);
-        fullscreenButton.setOnClickListener(this);
         progressBar.setOnSeekBarChangeListener(this);
         bottomContainer.setOnClickListener(this);
 
@@ -110,7 +107,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            fullscreenButton.setImageResource(R.drawable.jz_shrink);
             backButton.setVisibility(View.VISIBLE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
             if (dataSource.getMap().size() == 1) {
@@ -123,7 +119,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
-            fullscreenButton.setImageResource(R.drawable.jz_enlarge);
             backButton.setVisibility(View.GONE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
@@ -259,17 +254,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             } else if (getStateMachine().currentStateAutoComplete()) {
                 onEvent(JZUserAction.ON_CLICK_START_AUTO_COMPLETE);
                 startVideo();
-            }
-        } else if (i == R.id.fullscreen) {
-            Log.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
-            if (getStateMachine().currentStateAutoComplete()) return;
-            if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-                //quit fullscreen
-                backPress();
-            } else {
-                Log.d(TAG, "toFullscreenActivity [" + this.hashCode() + "] ");
-                onEvent(JZUserAction.ON_ENTER_FULLSCREEN);
-                startWindowFullscreen();
             }
         } else if (i == R.id.thumb) {
             if (dataSource == null || dataSource.getCurrentPath(currentUrlMapIndex) == null) {
