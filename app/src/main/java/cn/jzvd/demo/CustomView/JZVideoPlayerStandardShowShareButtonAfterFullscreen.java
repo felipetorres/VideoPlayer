@@ -6,14 +6,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.demo.R;
 
 /**
  * Created by Nathen
  * On 2016/04/22 00:54
  */
-public class JZVideoPlayerStandardShowShareButtonAfterFullscreen extends JZVideoPlayerStandard {
+public class JZVideoPlayerStandardShowShareButtonAfterFullscreen extends JZVideoPlayerStandardGlide {
 
     public ImageView shareButton;
 

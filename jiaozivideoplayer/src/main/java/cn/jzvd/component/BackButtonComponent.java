@@ -28,7 +28,6 @@ public class BackButtonComponent extends JZUIComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        super.init(frameLayout);
         backButton = frameLayout.findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

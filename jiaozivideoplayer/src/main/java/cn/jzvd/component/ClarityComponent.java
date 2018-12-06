@@ -31,7 +31,6 @@ public class ClarityComponent extends JZUIComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        super.init(frameLayout);
         clarity = frameLayout.findViewById(R.id.clarity);
         clarity.setOnClickListener(new View.OnClickListener() {
             @Override

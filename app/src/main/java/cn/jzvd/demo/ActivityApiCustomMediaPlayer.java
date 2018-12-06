@@ -1,6 +1,5 @@
 package cn.jzvd.demo;
 
-import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -22,6 +19,7 @@ import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.demo.CustomMediaPlayer.CustomMediaPlayerAssertFolder;
 import cn.jzvd.demo.CustomMediaPlayer.JZExoPlayer;
 import cn.jzvd.demo.CustomMediaPlayer.JZMediaIjkplayer;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 /**
  * Created by Nathen on 2017/11/23.
@@ -29,7 +27,7 @@ import cn.jzvd.demo.CustomMediaPlayer.JZMediaIjkplayer;
 
 public class ActivityApiCustomMediaPlayer extends AppCompatActivity implements View.OnClickListener {
     Button mChangeToIjk, mChangeToSystemMediaPlayer, mChangeToExo;
-    JZVideoPlayerStandard jzVideoPlayerStandard;
+    JZVideoPlayerStandardGlide jzVideoPlayerStandardGlide;
     Handler handler = new Handler();//这里其实并不需要handler，为了防止播放中切换播放器引擎导致的崩溃，实际使用时一般不会遇到，可以随时调用JZVideoPlayer.setMediaInterface();
 
     @Override
@@ -42,7 +40,7 @@ public class ActivityApiCustomMediaPlayer extends AppCompatActivity implements V
         getSupportActionBar().setTitle("CustomMediaPlayer");
         setContentView(R.layout.activity_api_custom_mediaplayer);
 
-        jzVideoPlayerStandard = findViewById(R.id.videoplayer);
+        jzVideoPlayerStandardGlide = findViewById(R.id.videoplayer);
         mChangeToIjk = findViewById(R.id.change_to_ijkplayer);
         mChangeToSystemMediaPlayer = findViewById(R.id.change_to_system_mediaplayer);
         mChangeToExo = findViewById(R.id.change_to_exo);
@@ -59,10 +57,10 @@ public class ActivityApiCustomMediaPlayer extends AppCompatActivity implements V
         }
         JZDataSource dataSource = new JZDataSource(map);
 
-        jzVideoPlayerStandard.setUp(dataSource, 0, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "饺子快长大");
-        Glide.with(this)
-                .load("http://jzvd-pic.nathen.cn/jzvd-pic/1bb2ebbe-140d-4e2e-abd2-9e7e564f71ac.png")
-                .into(jzVideoPlayerStandard.thumbImageView);
+        jzVideoPlayerStandardGlide.setUp(dataSource,
+                                    0,
+                                    JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,
+                                    "饺子快长大", "http://jzvd-pic.nathen.cn/jzvd-pic/1bb2ebbe-140d-4e2e-abd2-9e7e564f71ac.png");
 
         JZVideoPlayer.setMediaInterface(new CustomMediaPlayerAssertFolder());//进入此页面修改MediaInterface，让此页面的jzvd正常工作
     }

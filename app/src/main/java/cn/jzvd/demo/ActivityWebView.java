@@ -9,11 +9,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AbsoluteLayout;
 
-import com.bumptech.glide.Glide;
-
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 /**
  * Created by Nathen on 16/10/13.
@@ -70,12 +68,11 @@ public class ActivityWebView extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (index == 0) {
-                        JZVideoPlayerStandard webVieo = new JZVideoPlayerStandard(ActivityWebView.this);
+                        JZVideoPlayerStandardGlide webVieo = new JZVideoPlayerStandardGlide(ActivityWebView.this);
                         webVieo.setUp(VideoConstant.videoUrlList[1],
-                                JZVideoPlayer.SCREEN_WINDOW_LIST, "饺子骑大马");
-                        Glide.with(ActivityWebView.this)
-                                .load(VideoConstant.videoThumbList[1])
-                                .into(webVieo.thumbImageView);
+                                      JZVideoPlayer.SCREEN_WINDOW_LIST,
+                                      "饺子骑大马",
+                                      VideoConstant.videoThumbList[1]);
                         ViewGroup.LayoutParams ll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams(ll);
                         layoutParams.y = JZUtils.dip2px(ActivityWebView.this, top);
@@ -84,12 +81,11 @@ public class ActivityWebView extends AppCompatActivity {
                         layoutParams.width = JZUtils.dip2px(ActivityWebView.this, width);
                         mWebView.addView(webVieo, layoutParams);
                     } else {
-                        JZVideoPlayerStandard webVieo = new JZVideoPlayerStandard(ActivityWebView.this);
+                        JZVideoPlayerStandardGlide webVieo = new JZVideoPlayerStandardGlide(ActivityWebView.this);
                         webVieo.setUp(VideoConstant.videoUrlList[2],
-                                JZVideoPlayer.SCREEN_WINDOW_LIST, "饺子失态了");
-                        Glide.with(ActivityWebView.this)
-                                .load(VideoConstant.videoThumbList[2])
-                                .into(webVieo.thumbImageView);
+                                      JZVideoPlayer.SCREEN_WINDOW_LIST,
+                                      "饺子失态了",
+                                      VideoConstant.videoThumbList[2]);
                         ViewGroup.LayoutParams ll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams(ll);
                         layoutParams.y = JZUtils.dip2px(ActivityWebView.this, top);

@@ -14,7 +14,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.JZUIComponent;
+import cn.jzvd.component.JZUIControlComponent;
 import cn.jzvd.component.Loader;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
@@ -34,20 +36,15 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public ViewGroup topContainer, bottomContainer;
     public TextureViewContainer textureViewContainer;
 
-
     public ProgressBar bottomProgressBar, loadingProgressBar;
-
-    public ImageView thumbImageView;
-
     public TextView replayTextView;
-
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
     public boolean mTouchingProgressBar;
 
     private JZDialogs dialogs;
-    private final WifiDialog wifiDialog = new WifiDialog(this);
+    public final WifiDialog wifiDialog = new WifiDialog(this);
     protected Loader loader;
 
     public JZVideoPlayerStandard(Context context) {
@@ -75,16 +72,13 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
         startButton.setOnClickListener(this);
         progressBar.setOnSeekBarChangeListener(this);
-        bottomContainer.setOnClickListener(this);
 
         bottomProgressBar = findViewById(R.id.bottom_progress);
-        thumbImageView = findViewById(R.id.thumb);
+
         loadingProgressBar = findViewById(R.id.loading);
         replayTextView = findViewById(R.id.replay_text);
         mRetryBtn = findViewById(R.id.retry_btn);
         mRetryLayout = findViewById(R.id.retry_layout);
-
-        thumbImageView.setOnClickListener(this);
 
         mRetryBtn.setOnClickListener(this);
     }
@@ -92,7 +86,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
         super.setUp(dataSource, defaultUrlMapIndex, screen, objects);
 
-        for (JZUIComponent component : loader.getRegisteredComponents()) {
+        for (JZCoreComponent component : loader.getAllRegisteredComponents()) {
             component.setUp(dataSource, defaultUrlMapIndex, screen, objects);
         }
 
@@ -104,7 +98,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                    View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                    View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
             textureViewContainer.addTextureView();
         }
 
@@ -232,23 +226,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
                 onEvent(JZUserAction.ON_CLICK_START_AUTO_COMPLETE);
                 startVideo();
             }
-        } else if (i == R.id.thumb) {
-            if (dataSource == null || dataSource.getCurrentPath(currentUrlMapIndex) == null) {
-                Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (getStateMachine().currentStateNormal()) {
-                if (!dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("file") &&
-                        !dataSource.getCurrentPath(currentUrlMapIndex).toString().startsWith("/") &&
-                        !JZUtils.isWifiConnected(getContext()) && !wifiDialog.showed()) {
-                    wifiDialog.show();
-                    return;
-                }
-                onEvent(JZUserActionStandard.ON_CLICK_START_THUMB);
-                startVideo();
-            } else if (getStateMachine().currentStateAutoComplete()) {
-                onClickUiToggle();
-            }
         } else if (i == R.id.retry_btn) {
             if (dataSource == null || dataSource.getCurrentPath(currentUrlMapIndex) == null) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
@@ -314,7 +291,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void onClickUiToggle() {
-        for (JZUIComponent component : loader.getRegisteredComponents()) {
+        for (JZUIComponent component : loader.getRegisteredUIComponents()) {
             component.onClickUiToggle();
         }
 
@@ -365,16 +342,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     private void changeUiToNormal() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onNormal(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -383,16 +364,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void changeUiToPreparing() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onPreparing(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -402,16 +387,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     private void changeUiToPlayingShow() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onPlayingShow(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -421,15 +410,19 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void changeUiToPlayingClear() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onPlayingClear(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -438,16 +431,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     private void changeUiToPauseShow() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onPauseShow(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -456,15 +453,19 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void changeUiToPauseClear() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onPauseClear(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -473,16 +474,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void changeUiToComplete() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onComplete(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -492,16 +497,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     private void changeUiToError() {
+        for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
+            component.onError(currentScreen);
+        }
+
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -511,12 +520,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void setAllControlsVisiblity(int topCon, int bottomCon, int startBtn, int loadingPro,
-                                        int thumbImg, int bottomPro, int retryLayout) {
+                                        int bottomPro, int retryLayout) {
         topContainer.setVisibility(topCon);
         bottomContainer.setVisibility(bottomCon);
         startButton.setVisibility(startBtn);
         loadingProgressBar.setVisibility(loadingPro);
-        thumbImageView.setVisibility(thumbImg);
         bottomProgressBar.setVisibility(bottomPro);
         mRetryLayout.setVisibility(retryLayout);
     }
@@ -558,7 +566,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void dismissRegisteredComponents() {
-        for (JZUIComponent component : loader.getRegisteredComponents()) {
+        for (JZUIComponent component : loader.getRegisteredUIComponents()) {
             component.onCompletion();
         }
     }

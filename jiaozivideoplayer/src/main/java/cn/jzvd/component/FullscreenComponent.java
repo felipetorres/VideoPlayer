@@ -31,7 +31,6 @@ public class FullscreenComponent extends JZUIComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        super.init(frameLayout);
         fullscreenButton = frameLayout.findViewById(R.id.fullscreen);
         fullscreenButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.bumptech.glide.Glide;
-
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 /**
  * Created by Nathen
@@ -60,17 +58,15 @@ public class AdapterVideoList extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.jzVideoPlayer = convertView.findViewById(R.id.videoplayer);
-        viewHolder.jzVideoPlayer.setUp(
-                videoUrls[position], JZVideoPlayer.SCREEN_WINDOW_LIST,
-                videoTitles[position]);
-        Glide.with(convertView.getContext())
-                .load(videoThumbs[position])
-                .into(viewHolder.jzVideoPlayer.thumbImageView);
+        viewHolder.jzVideoPlayer.setUp(videoUrls[position],
+                                       JZVideoPlayer.SCREEN_WINDOW_LIST,
+                                       videoTitles[position],
+                                       videoThumbs[position]);
         viewHolder.jzVideoPlayer.positionInList = position;
         return convertView;
     }
 
     class ViewHolder {
-        JZVideoPlayerStandard jzVideoPlayer;
+        JZVideoPlayerStandardGlide jzVideoPlayer;
     }
 }

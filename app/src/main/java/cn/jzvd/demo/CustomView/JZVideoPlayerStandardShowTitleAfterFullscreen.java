@@ -14,7 +14,7 @@ import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
  * Created by Nathen
  * On 2016/04/27 10:49
  */
-public class JZVideoPlayerStandardShowTitleAfterFullscreen extends JZVideoPlayerStandard {
+public class JZVideoPlayerStandardShowTitleAfterFullscreen extends JZVideoPlayerStandardGlide {
     public JZVideoPlayerStandardShowTitleAfterFullscreen(Context context) {
         super(context);
     }

@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 public class AdapterRecyclerViewVideo extends RecyclerView.Adapter<AdapterRecyclerViewVideo.MyViewHolder> {
 
@@ -36,10 +34,10 @@ public class AdapterRecyclerViewVideo extends RecyclerView.Adapter<AdapterRecycl
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder [" + holder.jzVideoPlayer.hashCode() + "] position=" + position);
 
-        holder.jzVideoPlayer.setUp(
-                VideoConstant.videoUrls[0][position], JZVideoPlayer.SCREEN_WINDOW_LIST,
-                VideoConstant.videoTitles[0][position]);
-        Glide.with(holder.jzVideoPlayer.getContext()).load(VideoConstant.videoThumbs[0][position]).into(holder.jzVideoPlayer.thumbImageView);
+        holder.jzVideoPlayer.setUp(VideoConstant.videoUrls[0][position],
+                                   JZVideoPlayer.SCREEN_WINDOW_LIST,
+                                   VideoConstant.videoTitles[0][position],
+                                   VideoConstant.videoThumbs[0][position]);
     }
 
     @Override
@@ -48,7 +46,7 @@ public class AdapterRecyclerViewVideo extends RecyclerView.Adapter<AdapterRecycl
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        JZVideoPlayerStandard jzVideoPlayer;
+        JZVideoPlayerStandardGlide jzVideoPlayer;
 
         public MyViewHolder(View itemView) {
             super(itemView);

@@ -29,7 +29,6 @@ public class TinyBackButton extends JZUIComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        super.init(frameLayout);
         tinyBackImageView = frameLayout.findViewById(R.id.back_tiny);
         tinyBackImageView.setOnClickListener(new View.OnClickListener() {
             @Override

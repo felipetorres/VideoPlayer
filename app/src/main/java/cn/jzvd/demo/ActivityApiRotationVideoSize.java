@@ -7,11 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.bumptech.glide.Glide;
-
 import cn.jzvd.JZResizeTextureView;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 /**
  * Created by Nathen on 2017/11/2.
@@ -19,7 +18,7 @@ import cn.jzvd.JZVideoPlayerStandard;
 
 public class ActivityApiRotationVideoSize extends AppCompatActivity implements View.OnClickListener {
 
-    JZVideoPlayerStandard myJZVideoPlayerStandard;
+    JZVideoPlayerStandardGlide myJZVideoPlayerStandard;
     Button mBtnRotation, mBtnFillParent, mBtnFillCrop, mBtnOriginal;
 
     @Override
@@ -33,11 +32,10 @@ public class ActivityApiRotationVideoSize extends AppCompatActivity implements V
         setContentView(R.layout.activity_api_rotation_videosize);
 
         myJZVideoPlayerStandard = findViewById(R.id.jz_video);
-        myJZVideoPlayerStandard.setUp(VideoConstant.videoUrls[0][7]
-                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, VideoConstant.videoTitles[0][7]);
-        Glide.with(this)
-                .load(VideoConstant.videoThumbs[0][7])
-                .into(myJZVideoPlayerStandard.thumbImageView);
+        myJZVideoPlayerStandard.setUp(VideoConstant.videoUrls[0][7],
+                                      JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,
+                                      VideoConstant.videoTitles[0][7],
+                                      VideoConstant.videoThumbs[0][7]);
         // The Point IS
         myJZVideoPlayerStandard.rotateTo(180);
 

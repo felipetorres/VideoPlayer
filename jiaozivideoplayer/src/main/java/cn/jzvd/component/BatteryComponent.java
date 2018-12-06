@@ -48,7 +48,6 @@ public class BatteryComponent extends JZUIComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        super.init(frameLayout);
         batteryTimeLayout = frameLayout.findViewById(R.id.battery_time_layout);
         videoCurrentTime = frameLayout.findViewById(R.id.video_current_time);
         batteryLevel = frameLayout.findViewById(R.id.battery_level);

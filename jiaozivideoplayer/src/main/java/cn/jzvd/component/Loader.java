@@ -10,14 +10,17 @@ import cn.jzvd.JZVideoPlayerStandard;
 public class Loader {
 
     private Map<String, JZUIComponent> registeredComponents = new HashMap<>();
+    private Map<String, JZUIControlComponent> registeredControlComponents = new HashMap<>();
 
     public Loader(JZVideoPlayerStandard player) {
         register(new BatteryComponent(player),
-                 new TitleComponent(player),
-                 new FullscreenComponent(player),
-                 new TinyBackButton(player),
-                 new BackButtonComponent(player),
-                 new ClarityComponent(player));
+                new TitleComponent(player),
+                new FullscreenComponent(player),
+                new TinyBackButton(player),
+                new BackButtonComponent(player),
+                new ClarityComponent(player));
+
+        registerControl(new ThumbComponent(player));
     }
 
     public void register(JZUIComponent... components) {
@@ -26,11 +29,24 @@ public class Loader {
         }
     }
 
-    public void remove(Class<? extends JZUIComponent> component) {
-        registeredComponents.remove(component.getSimpleName());
+    public void registerControl(JZUIControlComponent... components) {
+        for (JZUIControlComponent component : components) {
+            registeredControlComponents.put(component.getName(), component);
+        }
     }
 
-    public List<JZUIComponent> getRegisteredComponents() {
+    public List<JZCoreComponent> getAllRegisteredComponents() {
+        ArrayList<JZCoreComponent> all = new ArrayList<>();
+        all.addAll(registeredComponents.values());
+        all.addAll(registeredControlComponents.values());
+        return all;
+    }
+
+    public List<JZUIComponent> getRegisteredUIComponents() {
         return new ArrayList<>(registeredComponents.values());
+    }
+
+    public List<JZUIControlComponent> getRegisteredControlComponents() {
+        return new ArrayList<>(registeredControlComponents.values());
     }
 }

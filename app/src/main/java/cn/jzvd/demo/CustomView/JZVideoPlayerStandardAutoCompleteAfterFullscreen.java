@@ -8,13 +8,12 @@ import android.view.WindowManager;
 import cn.jzvd.JZAudioManager;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayerStandard;
 
 /**
  * 全屏状态播放完成，不退出全屏
  * Created by Nathen on 2016/11/26.
  */
-public class JZVideoPlayerStandardAutoCompleteAfterFullscreen extends JZVideoPlayerStandard {
+public class JZVideoPlayerStandardAutoCompleteAfterFullscreen extends JZVideoPlayerStandardGlide {
     public JZVideoPlayerStandardAutoCompleteAfterFullscreen(Context context) {
         super(context);
     }

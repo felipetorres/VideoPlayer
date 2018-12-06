@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.demo.CustomView.JZVideoPlayerStandardGlide;
 
 /**
  * Created by Nathen on 2017/11/1.
@@ -106,11 +104,11 @@ public class ActivityTinyWindowRecycleViewMultiHolder extends AppCompatActivity 
                 TextHolder textHolder = (TextHolder) holder;
             } else {
                 VideoHolder videoHolder = (VideoHolder) holder;
-                videoHolder.jzVideoPlayer.setUp(
-                        VideoConstant.videoUrls[0][position], JZVideoPlayer.SCREEN_WINDOW_LIST,
-                        VideoConstant.videoTitles[0][position]);
+                videoHolder.jzVideoPlayer.setUp(VideoConstant.videoUrls[0][position],
+                                                JZVideoPlayer.SCREEN_WINDOW_LIST,
+                                                VideoConstant.videoTitles[0][position],
+                                                VideoConstant.videoThumbs[0][position]);
                 videoHolder.jzVideoPlayer.positionInList = position;
-                Glide.with(ActivityTinyWindowRecycleViewMultiHolder.this).load(VideoConstant.videoThumbs[0][position]).into(videoHolder.jzVideoPlayer.thumbImageView);
             }
         }
 
@@ -120,7 +118,7 @@ public class ActivityTinyWindowRecycleViewMultiHolder extends AppCompatActivity 
         }
 
         class VideoHolder extends RecyclerView.ViewHolder {
-            JZVideoPlayerStandard jzVideoPlayer;
+            JZVideoPlayerStandardGlide jzVideoPlayer;
 
             public VideoHolder(View itemView) {
                 super(itemView);
