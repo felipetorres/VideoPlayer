@@ -4,14 +4,14 @@ import android.content.Context;
 import android.widget.FrameLayout;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
 
 public abstract class JZCoreComponent {
 
-    protected JZVideoPlayerStandard player;
+    protected JZVideoPlayer player;
     protected Context context;
 
-    public JZCoreComponent(JZVideoPlayerStandard player) {
+    public JZCoreComponent(JZVideoPlayer player) {
         this.player = player;
         this.context = player.getContext();
         this.init(player);
@@ -24,4 +24,6 @@ public abstract class JZCoreComponent {
     public abstract void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects);
 
     public void onClickUiToggle() { }
+
+    public void onDismissControlView() { }
 }

@@ -8,7 +8,7 @@ import android.widget.Toast;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZUserActionStandard;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
@@ -17,7 +17,7 @@ public class ThumbComponent extends JZUIControlComponent {
 
     protected ImageView thumbImageView;
 
-    public ThumbComponent(JZVideoPlayerStandard player) {
+    public ThumbComponent(JZVideoPlayer player) {
         super(player);
     }
 
@@ -52,14 +52,14 @@ public class ThumbComponent extends JZUIControlComponent {
         if (player.getStateMachine().currentStateNormal()) {
             if (!player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file") &&
                     !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/") &&
-                    !JZUtils.isWifiConnected(context) && !player.wifiDialog.showed()) {
-                player.wifiDialog.show();
+                    !JZUtils.isWifiConnected(context) && !wifiDialog.showed()) {
+                wifiDialog.show();
                 return;
             }
             player.onEvent(JZUserActionStandard.ON_CLICK_START_THUMB);
             player.startVideo();
         } else if (player.getStateMachine().currentStateAutoComplete()) {
-            onClickUiToggle();
+            player.onClickUiToggle();
         }
     }
 

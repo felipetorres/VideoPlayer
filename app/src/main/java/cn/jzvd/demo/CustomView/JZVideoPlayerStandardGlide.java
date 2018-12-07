@@ -31,7 +31,7 @@ public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
     public void onAutoCompletion() {
         super.onAutoCompletion();
         for (JZUIControlComponent component : super.loader.getRegisteredControlComponents()) {
-            component.onAutoCompletion(currentScreen);
+            component.onAutoCompletion();
         }
     }
 }
@@ -51,8 +51,8 @@ class CustomThumbComponent extends ThumbComponent {
     }
 
     @Override
-    public void onAutoCompletion(int currentScreen) {
-        super.onAutoCompletion(currentScreen);
+    public void onAutoCompletion() {
+        super.onAutoCompletion();
         thumbImageView.setVisibility(View.GONE);
     }
 }

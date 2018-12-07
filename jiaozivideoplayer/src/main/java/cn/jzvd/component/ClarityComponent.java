@@ -19,9 +19,11 @@ public class ClarityComponent extends JZUIComponent {
 
     private TextView clarity;
     private PopupWindow clarityPopWindow;
+    private JZVideoPlayerStandard player;
 
     public ClarityComponent(JZVideoPlayerStandard player) {
         super(player);
+        this.player = player;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class ClarityComponent extends JZUIComponent {
     }
 
     @Override
-    public void onCompletion() {
+    public void onDismissControlView() {
         if (clarityPopWindow != null) {
             clarityPopWindow.dismiss();
         }

@@ -24,6 +24,7 @@ public class BatteryComponent extends JZUIComponent {
     private static long LAST_GET_BATTERYLEVEL_TIME = 0;
     private static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
 
+    private final JZVideoPlayerStandard player;
     private LinearLayout batteryTimeLayout;
     private TextView videoCurrentTime;
     private ImageView batteryLevel;
@@ -44,6 +45,7 @@ public class BatteryComponent extends JZUIComponent {
 
     public BatteryComponent(JZVideoPlayerStandard player) {
         super(player);
+        this.player = player;
     }
 
     @Override

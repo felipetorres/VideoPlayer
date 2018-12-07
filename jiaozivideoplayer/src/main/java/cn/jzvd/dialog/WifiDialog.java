@@ -4,15 +4,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import cn.jzvd.JZUserActionStandard;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 
 public class WifiDialog {
 
     private static boolean WIFI_TIP_DIALOG_SHOWED = false;
-    private JZVideoPlayerStandard player;
+    private final JZVideoPlayer player;
 
-    public WifiDialog(JZVideoPlayerStandard player) {
+    public WifiDialog(JZVideoPlayer player) {
         this.player = player;
     }
 

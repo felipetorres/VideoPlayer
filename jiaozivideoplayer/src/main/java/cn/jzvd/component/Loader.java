@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 
 public class Loader {
@@ -12,22 +13,35 @@ public class Loader {
     private Map<String, JZUIComponent> registeredComponents = new HashMap<>();
     private Map<String, JZUIControlComponent> registeredControlComponents = new HashMap<>();
 
-    public Loader(JZVideoPlayerStandard player) {
+    public void registerControlComponents(JZVideoPlayer player) {
+        registerControl(new ThumbComponent(player),
+                        new RetryComponent(player),
+                        new StartButtonComponent(player));
+    }
+
+    public void registerComponents(JZVideoPlayerStandard player) {
         register(new BatteryComponent(player),
                  new TitleComponent(player),
                  new FullscreenComponent(player),
                  new TinyBackButton(player),
                  new BackButtonComponent(player),
                  new ClarityComponent(player));
-
-        registerControl(new ThumbComponent(player),
-                        new RetryComponent(player));
     }
 
     public void register(JZUIComponent... components) {
         for (JZUIComponent component : components) {
             registeredComponents.put(component.getName(), component);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends JZUIControlComponent> T getControlComponent(Class<T> _class) {
+        return (T) registeredControlComponents.get(_class.getSimpleName());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends JZUIComponent> T getUIComponent(Class<T> _class) {
+        return (T) registeredComponents.get(_class.getSimpleName());
     }
 
     public void registerControl(JZUIControlComponent... components) {

@@ -40,7 +40,7 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
         if (currentScreen == SCREEN_WINDOW_TINY) {
-            setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
+            setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
                     View.INVISIBLE, View.INVISIBLE);
         }
     }

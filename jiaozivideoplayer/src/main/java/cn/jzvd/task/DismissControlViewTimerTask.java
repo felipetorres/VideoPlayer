@@ -46,7 +46,6 @@ public class DismissControlViewTimerTask extends TimerTask {
                 public void run() {
                     player.bottomContainer.setVisibility(View.INVISIBLE);
                     player.topContainer.setVisibility(View.INVISIBLE);
-                    player.startButton.setVisibility(View.INVISIBLE);
                     player.dismissRegisteredComponents();
                     if (player.currentScreen != SCREEN_WINDOW_TINY) {
                         player.bottomProgressBar.setVisibility(View.VISIBLE);

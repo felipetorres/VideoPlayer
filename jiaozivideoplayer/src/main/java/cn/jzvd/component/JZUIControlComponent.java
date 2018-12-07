@@ -1,11 +1,15 @@
 package cn.jzvd.component;
 
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
+import cn.jzvd.dialog.WifiDialog;
 
 public abstract class JZUIControlComponent extends JZCoreComponent {
 
-    public JZUIControlComponent(JZVideoPlayerStandard player) {
+    protected static WifiDialog wifiDialog;
+
+    public JZUIControlComponent(JZVideoPlayer player) {
         super(player);
+        wifiDialog = new WifiDialog(player);
     }
 
     public abstract void onNormal(int currentScreen);
@@ -24,5 +28,7 @@ public abstract class JZUIControlComponent extends JZCoreComponent {
 
     public abstract void onError(int currentScreen);
 
-    public void onAutoCompletion(int currentScreen) { }
+    public void onAutoCompletion() { }
+
+    public void onPreparingChangingUrl() { }
 }

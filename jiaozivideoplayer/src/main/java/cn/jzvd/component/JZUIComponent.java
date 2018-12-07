@@ -7,6 +7,4 @@ public abstract class JZUIComponent extends JZCoreComponent {
     public JZUIComponent(JZVideoPlayerStandard player) {
         super(player);
     }
-
-    public void onCompletion() { }
 }

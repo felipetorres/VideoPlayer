@@ -18,6 +18,9 @@ import android.widget.SeekBar;
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 
+import cn.jzvd.component.Loader;
+import cn.jzvd.component.StartButtonComponent;
+
 /**
  * Created by Nathen on 16/7/30.
  */
@@ -51,6 +54,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     boolean tmp_test_back = false;
     private JZVideoPlayerStateMachine stateMachine = new JZVideoPlayerStateMachine(this);
+    protected final Loader loader = new Loader();
 
     public JZVideoPlayer(Context context) {
         super(context);
@@ -64,6 +68,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     public void init(Context context) {
         View.inflate(context, getLayoutId(), this);
+        loader.registerControlComponents(this);
 
         try {
             if (isCurrentPlay()) {
@@ -118,8 +123,9 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 //            jzVideoPlayer.setAnimation(ra);
             jzVideoPlayer.setUp(dataSource, defaultUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
-            //TODO FELIPE: RESOLVER ISSO AQUI
-//            jzVideoPlayer.startButton.performClick();
+
+            StartButtonComponent startButton = jzVideoPlayer.loader.getControlComponent(StartButtonComponent.class);
+            startButton.performClick();
         }
     }
 
@@ -276,7 +282,7 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         return dataSource.getCurrentPath(currentUrlMapIndex);
     }
 
-    protected void onClickUiToggle() { }
+    public void onClickUiToggle() { }
 
     public void setUp(String url, int screen, Object... objects) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -318,7 +324,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
     }
 
     public void startVideo() {
-        JZAudioManager.getInstance(this).requestAudioFocus();
         JZUtils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         JZMediaManager.setDataSource(dataSource);
@@ -418,7 +423,6 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
         JZMediaManager.instance().currentVideoWidth = 0;
         JZMediaManager.instance().currentVideoHeight = 0;
 
-        JZAudioManager.getInstance(this).abandonAudioFocus();
         JZUtils.scanForActivity(getContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         clearFullscreenLayout();
         JZUtils.setRequestedOrientation(getContext(), NORMAL_ORIENTATION);

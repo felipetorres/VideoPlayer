@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 
+import cn.jzvd.component.StartButtonComponent;
+
 import static cn.jzvd.JZVideoPlayer.releaseAllVideos;
 
 public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
@@ -12,10 +14,12 @@ public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
 
     private static JZAudioManager INSTANCE;
     private final AudioManager mAudioManager;
+    private JZVideoPlayerStandard player;
 
-    public static JZAudioManager getInstance(JZVideoPlayer player) {
+    public static JZAudioManager getInstance(JZVideoPlayerStandard player) {
         if(INSTANCE == null) {
             INSTANCE = new JZAudioManager(player);
+            INSTANCE.player = player;
         }
         return INSTANCE;
     }
@@ -43,10 +47,9 @@ public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 try {
-                    JZVideoPlayer player = JZVideoPlayerManager.getCurrentJzvd();
                     if (player != null && player.getStateMachine().currentStatePlaying()) {
-                        //TODO FELIPE: RESOLVER ISSO AQUI
-//                            player.startButton.performClick();
+                        StartButtonComponent startButton = player.loader.getControlComponent(StartButtonComponent.class);
+                        startButton.performClick();
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();

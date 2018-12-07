@@ -10,17 +10,16 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
 public class RetryComponent extends JZUIControlComponent {
 
-    private TextView mRetryBtn;
     private LinearLayout mRetryLayout;
 
-    public RetryComponent(JZVideoPlayerStandard player) {
+    public RetryComponent(JZVideoPlayer player) {
         super(player);
     }
 
@@ -31,7 +30,7 @@ public class RetryComponent extends JZUIControlComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
-        mRetryBtn = frameLayout.findViewById(R.id.retry_btn);
+        TextView mRetryBtn = frameLayout.findViewById(R.id.retry_btn);
         mRetryLayout = frameLayout.findViewById(R.id.retry_layout);
 
         mRetryBtn.setOnClickListener(new View.OnClickListener() {
@@ -49,11 +48,12 @@ public class RetryComponent extends JZUIControlComponent {
         }
         if (!player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file") && !
                 player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/") &&
-                !JZUtils.isWifiConnected(context) && !player.wifiDialog.showed()) {
-            player.wifiDialog.show();
+                !JZUtils.isWifiConnected(context) && !wifiDialog.showed()) {
+            wifiDialog.show();
             return;
         }
-        player.textureViewContainer.initTextureView();//和开始播放的代码重复
+        //TODO FELIPE: ARRUMAR AQUI
+        //player.textureViewContainer.initTextureView();//和开始播放的代码重复
         JZMediaManager.setDataSource(player.dataSource);
         JZMediaManager.setCurrentPath(player.dataSource.getCurrentPath(player.currentUrlMapIndex));
         player.getStateMachine().setPreparing();
