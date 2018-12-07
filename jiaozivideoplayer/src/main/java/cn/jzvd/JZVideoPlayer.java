@@ -13,18 +13,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.SeekBar;
 
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 
+import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.Loader;
+import cn.jzvd.component.ProgressComponent;
 import cn.jzvd.component.StartButtonComponent;
+import cn.jzvd.task.ProgressTimerTask;
 
 /**
  * Created by Nathen on 16/7/30.
  */
-public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
+public abstract class JZVideoPlayer extends FrameLayout {
 
     public static final String TAG = "JiaoZiVideoPlayer";
 
@@ -83,6 +85,16 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
     public JZVideoPlayerStateMachine getStateMachine() {
         return stateMachine;
+    }
+
+    public void setProgressAndText() { }
+
+    public void setBufferProgress(int bufferProgress) { }
+
+    public void dismissRegisteredComponents() {
+        for (JZCoreComponent component : loader.getAllRegisteredComponents()) {
+            component.onDismissControlView();
+        }
     }
 
     public boolean isCurrentPlay() {
@@ -510,9 +522,9 @@ public abstract class JZVideoPlayer extends FrameLayout implements SeekBar.OnSee
 
             getStateMachine().setNormal();
 
-//            TODO FELIPE: ARRUMAR ISSO AQUI
-//            jzVideoPlayer.progressBar.setSecondaryProgress(progressBar.getSecondaryProgress());
-//            jzVideoPlayer.progressTimerTask.start();
+            ProgressComponent progressComponent = jzVideoPlayer.loader.getControlComponent(ProgressComponent.class);
+            progressComponent.copySecondaryProgressFrom(this.loader);
+            ProgressTimerTask.start(jzVideoPlayer);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
         }
     }

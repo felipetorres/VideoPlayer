@@ -3,18 +3,14 @@ package cn.jzvd;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import cn.jzvd.component.ClarityComponent;
 import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.JZUIComponent;
 import cn.jzvd.component.JZUIControlComponent;
+import cn.jzvd.component.ProgressComponent;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.task.DismissControlViewTimerTask;
@@ -24,14 +20,10 @@ import cn.jzvd.task.ProgressTimerTask;
  * Created by Nathen
  * On 2016/04/18 16:15
  */
-public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener, View.OnTouchListener {
+public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener {
 
-    public SeekBar progressBar;
-    private TextView currentTimeTextView, totalTimeTextView;
     public ViewGroup topContainer, bottomContainer;
     public TextureViewContainer textureViewContainer;
-
-    public ProgressBar bottomProgressBar;
 
     public boolean mTouchingProgressBar;
 
@@ -53,15 +45,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         this.dialogs = new JZDialogs(this);
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
-        progressBar = findViewById(R.id.bottom_seek_progress);
-        currentTimeTextView = findViewById(R.id.current);
-        totalTimeTextView = findViewById(R.id.total);
         bottomContainer = findViewById(R.id.layout_bottom);
         topContainer = findViewById(R.id.layout_top);
-
-        progressBar.setOnSeekBarChangeListener(this);
-
-        bottomProgressBar = findViewById(R.id.bottom_progress);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
@@ -74,8 +59,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
-            setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                    View.INVISIBLE);
+            setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
             textureViewContainer.addTextureView();
         }
 
@@ -102,7 +86,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     @Override
     public void onStatePreparing() {
         super.onStatePreparing();
-        resetProgressAndTime();
         changeUiToPreparing();
     }
 
@@ -143,77 +126,12 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         ProgressTimerTask.finish();
         DismissControlViewTimerTask.finish();
 
-        progressBar.setProgress(100);
-        currentTimeTextView.setText(totalTimeTextView.getText());
-
         changeUiToComplete();
-        bottomProgressBar.setProgress(100);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        int id = v.getId();
-        if (id == R.id.bottom_seek_progress) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    DismissControlViewTimerTask.finish();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    DismissControlViewTimerTask.start(this);
-                    break;
-            }
-        }
-        return false;
     }
 
     @Deprecated
     public void onClick(View v) {
         //It will be removed in the next commits. Click behaviour must be managed by the components themselves.
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            //设置这个progres对应的时间，给textview
-            long duration = getDuration();
-            currentTimeTextView.setText(JZUtils.stringForTime(progress * duration / 100));
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        Log.i(TAG, "bottomProgress onStartTrackingTouch [" + this.hashCode() + "] ");
-        ProgressTimerTask.finish();
-        DismissControlViewTimerTask.finish();
-
-        ViewParent vpdown = getParent();
-        while (vpdown != null) {
-            vpdown.requestDisallowInterceptTouchEvent(true);
-            vpdown = vpdown.getParent();
-        }
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        Log.i(TAG, "bottomProgress onStopTrackingTouch [" + this.hashCode() + "] ");
-        onEvent(JZUserAction.ON_SEEK_POSITION);
-        ViewParent vpup = getParent();
-        while (vpup != null) {
-            vpup.requestDisallowInterceptTouchEvent(false);
-            vpup = vpup.getParent();
-        }
-        if (!getStateMachine().currentStatePlaying() && !getStateMachine().currentStatePause()) return;
-
-        long time = seekBar.getProgress() * getDuration() / 100;
-        JZMediaManager.seekTo(time);
-        Log.i(TAG, "seekTo " + time + " [" + this.hashCode() + "] ");
-
-        ProgressTimerTask.start(this);
-        if (getStateMachine().currentStatePlaying()) {
-            DismissControlViewTimerTask.oneShot();
-        } else {
-            DismissControlViewTimerTask.start(this);
-        }
     }
 
     public void onClickUiToggle() {
@@ -241,30 +159,25 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
     }
 
-    public void setProgressAndText(int progress, long position, long duration) {
-//        Log.d(TAG, "setProgressAndText: progress=" + progress + " position=" + position + " duration=" + duration);
-        if (!mTouchingProgressBar) {
-            if (progress != 0) progressBar.setProgress(progress);
-        }
-        if (position != 0) currentTimeTextView.setText(JZUtils.stringForTime(position));
-        totalTimeTextView.setText(JZUtils.stringForTime(duration));
-
-        if (progress != 0) bottomProgressBar.setProgress(progress);
+    public void setProgress(int progress) {
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        progressComponent.setProgress(progress);
     }
 
+    @Override
+    public void setProgressAndText() {
+        long position = getCurrentPositionWhenPlaying();
+        long duration = getDuration();
+        int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
+
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        progressComponent.setProgressAndText(mTouchingProgressBar, progress, position, duration);
+    }
+
+    @Override
     public void setBufferProgress(int bufferProgress) {
-        if (bufferProgress != 0) progressBar.setSecondaryProgress(bufferProgress);
-        if (bufferProgress != 0) bottomProgressBar.setSecondaryProgress(bufferProgress);
-    }
-
-    private void resetProgressAndTime() {
-        progressBar.setProgress(0);
-        progressBar.setSecondaryProgress(0);
-        currentTimeTextView.setText(JZUtils.stringForTime(0));
-        totalTimeTextView.setText(JZUtils.stringForTime(0));
-
-        bottomProgressBar.setProgress(0);
-        bottomProgressBar.setSecondaryProgress(0);
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        progressComponent.setBufferProgress(bufferProgress);
     }
 
     private void changeUiToNormal() {
@@ -275,12 +188,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -295,12 +206,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -316,12 +225,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -337,12 +244,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -358,12 +263,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -378,12 +281,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -399,12 +300,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -420,12 +319,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE);
+                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -433,11 +330,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     }
 
-    public void setAllControlsVisiblity(int topCon, int bottomCon,
-                                        int bottomPro) {
+    public void setAllControlsVisiblity(int topCon, int bottomCon) {
         topContainer.setVisibility(topCon);
         bottomContainer.setVisibility(bottomCon);
-        bottomProgressBar.setVisibility(bottomPro);
     }
 
     @Override
@@ -457,12 +352,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         DismissControlViewTimerTask.finish();
         ClarityComponent clarityComponent = loader.getUIComponent(ClarityComponent.class);
         clarityComponent.onDismissControlView();
-    }
-
-    public void dismissRegisteredComponents() {
-        for (JZCoreComponent component : loader.getAllRegisteredComponents()) {
-            component.onDismissControlView();
-        }
     }
 
     @Override

@@ -128,8 +128,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
                 @Override
                 public void run() {
                     if (JZVideoPlayerManager.getCurrentJzvd() != null) {
-                        //TODO FELIPE: RESOLVER ISSO AQUI
-//                        JZVideoPlayerManager.getCurrentJzvd().setBufferProgress(percent);
+                        JZVideoPlayerManager.getCurrentJzvd().setBufferProgress(percent);
                     }
                 }
             });

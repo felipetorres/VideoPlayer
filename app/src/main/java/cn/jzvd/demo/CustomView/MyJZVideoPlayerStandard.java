@@ -2,7 +2,6 @@ package cn.jzvd.demo.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -40,11 +39,6 @@ public class MyJZVideoPlayerStandard extends JZVideoPlayerStandardGlide {
     @Override
     public int getLayoutId() {
         return cn.jzvd.R.layout.jz_layout_standard;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return super.onTouch(v, event);
     }
 
     @Override

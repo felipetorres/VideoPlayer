@@ -1,29 +1,25 @@
 package cn.jzvd.task;
 
-import android.view.View;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.jzvd.JZVideoPlayerStandard;
-
-import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
+import cn.jzvd.JZVideoPlayer;
 
 public class DismissControlViewTimerTask extends TimerTask {
 
     private static Timer DISMISS_CONTROL_VIEW_TIMER;
     private static DismissControlViewTimerTask task;
-    private final JZVideoPlayerStandard player;
+    private final JZVideoPlayer player;
 
 
-    public static void start(JZVideoPlayerStandard player) {
+    public static void start(JZVideoPlayer player) {
         finish();
         DISMISS_CONTROL_VIEW_TIMER = new Timer();
         task = new DismissControlViewTimerTask(player);
         DISMISS_CONTROL_VIEW_TIMER.schedule(task, 2500);
     }
 
-    private DismissControlViewTimerTask(JZVideoPlayerStandard player) {
+    private DismissControlViewTimerTask(JZVideoPlayer player) {
         this.player = player;
     }
 
@@ -44,12 +40,10 @@ public class DismissControlViewTimerTask extends TimerTask {
             player.post(new Runnable() {
                 @Override
                 public void run() {
-                    player.bottomContainer.setVisibility(View.INVISIBLE);
-                    player.topContainer.setVisibility(View.INVISIBLE);
+                    //TODO FELIPE: ESSES CONTAINERES FICARAO NO PAI
+//                    player.bottomContainer.setVisibility(View.INVISIBLE);
+//                    player.topContainer.setVisibility(View.INVISIBLE);
                     player.dismissRegisteredComponents();
-                    if (player.currentScreen != SCREEN_WINDOW_TINY) {
-                        player.bottomProgressBar.setVisibility(View.VISIBLE);
-                    }
                 }
             });
         }

@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayer;
 
 import static cn.jzvd.JZVideoPlayer.TAG;
 
@@ -14,9 +14,9 @@ public class ProgressTimerTask extends TimerTask {
     private static ProgressTimerTask task;
     private static Timer UPDATE_PROGRESS_TIMER;
 
-    private final JZVideoPlayerStandard player;
+    private final JZVideoPlayer player;
 
-    public static void start(JZVideoPlayerStandard player) {
+    public static void start(JZVideoPlayer player) {
         finish();
         UPDATE_PROGRESS_TIMER = new Timer();
         task = new ProgressTimerTask(player);
@@ -24,7 +24,7 @@ public class ProgressTimerTask extends TimerTask {
         UPDATE_PROGRESS_TIMER.schedule(task, 0, 300);
     }
 
-    private ProgressTimerTask(JZVideoPlayerStandard player) {
+    private ProgressTimerTask(JZVideoPlayer player) {
         this.player = player;
     }
 
@@ -44,10 +44,7 @@ public class ProgressTimerTask extends TimerTask {
             player.post(new Runnable() {
                 @Override
                 public void run() {
-                    long position = player.getCurrentPositionWhenPlaying();
-                    long duration = player.getDuration();
-                    int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
-                    player.setProgressAndText(progress, position, duration);
+                    player.setProgressAndText();
                 }
             });
         }

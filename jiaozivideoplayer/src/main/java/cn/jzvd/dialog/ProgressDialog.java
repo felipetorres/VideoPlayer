@@ -85,7 +85,7 @@ public class ProgressDialog extends JZDialog {
             JZMediaManager.seekTo(mSeekTimePosition);
             long duration = getPlayer().getDuration();
             int progress = (int) (mSeekTimePosition * 100 / (duration == 0 ? 1 : duration));
-            getPlayer().progressBar.setProgress(progress);
+            getPlayer().setProgress(progress);
         }
     }
 
