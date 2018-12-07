@@ -14,7 +14,8 @@ public class Loader {
     private Map<String, JZUIControlComponent> registeredControlComponents = new HashMap<>();
 
     public void registerControlComponents(JZVideoPlayer player) {
-        registerControl(new ThumbComponent(player),
+        registerControl(new TopContainer(player),
+                        new ThumbComponent(player),
                         new RetryComponent(player),
                         new StartButtonComponent(player),
                         new ProgressComponent(player));

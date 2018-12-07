@@ -42,7 +42,6 @@ public class DismissControlViewTimerTask extends TimerTask {
                 public void run() {
                     //TODO FELIPE: ESSES CONTAINERES FICARAO NO PAI
 //                    player.bottomContainer.setVisibility(View.INVISIBLE);
-//                    player.topContainer.setVisibility(View.INVISIBLE);
                     player.dismissRegisteredComponents();
                 }
             });

@@ -22,7 +22,7 @@ import cn.jzvd.task.ProgressTimerTask;
  */
 public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener {
 
-    public ViewGroup topContainer, bottomContainer;
+    public ViewGroup bottomContainer;
     public TextureViewContainer textureViewContainer;
 
     public boolean mTouchingProgressBar;
@@ -46,7 +46,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
         bottomContainer = findViewById(R.id.layout_bottom);
-        topContainer = findViewById(R.id.layout_top);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
@@ -59,7 +58,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             textureViewContainer.initTextureView();
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
-            setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+            setAllControlsVisiblity(View.INVISIBLE);
             textureViewContainer.addTextureView();
         }
 
@@ -141,9 +140,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
         if (getStateMachine().currentStatePreparing()) {
             changeUiToPreparing();
-            if (bottomContainer.getVisibility() == View.VISIBLE) {
-            } else {
-            }
         } else if (getStateMachine().currentStatePlaying()) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPlayingClear();
@@ -188,10 +184,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -206,10 +202,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -225,10 +221,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
+                setAllControlsVisiblity(View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
+                setAllControlsVisiblity(View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -244,10 +240,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -263,10 +259,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
+                setAllControlsVisiblity(View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.VISIBLE);
+                setAllControlsVisiblity(View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -281,10 +277,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -300,10 +296,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -319,10 +315,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         switch (currentScreen) {
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
-                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE);
+                setAllControlsVisiblity(View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -330,8 +326,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     }
 
-    public void setAllControlsVisiblity(int topCon, int bottomCon) {
-        topContainer.setVisibility(topCon);
+    public void setAllControlsVisiblity(int bottomCon) {
         bottomContainer.setVisibility(bottomCon);
     }
 
