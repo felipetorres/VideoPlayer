@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.jzvd.JZDataSource;
@@ -23,6 +24,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     private static final String TAG = "StartButtonComponent";
 
     private ImageView startButton;
+    private TextView replayTextView;
 
     public StartButtonComponent(JZVideoPlayer player) {
         super(player);
@@ -31,6 +33,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     @Override
     protected void init(FrameLayout frameLayout) {
         startButton = frameLayout.findViewById(R.id.start);
+        replayTextView = frameLayout.findViewById(R.id.replay_text);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,17 +170,20 @@ public class StartButtonComponent extends JZUIControlComponent {
     }
 
     private void updateStartImage() {
-
         if (player.getStateMachine().currentStatePlaying()) {
             startButton.setVisibility(View.VISIBLE);
             startButton.setImageResource(R.drawable.jz_click_pause_selector);
+            replayTextView.setVisibility(View.INVISIBLE);
         } else if (player.getStateMachine().currentStateError()) {
             startButton.setVisibility(View.INVISIBLE);
+            replayTextView.setVisibility(View.INVISIBLE);
         } else if (player.getStateMachine().currentStateAutoComplete()) {
             startButton.setVisibility(View.VISIBLE);
             startButton.setImageResource(R.drawable.jz_click_replay_selector);
+            replayTextView.setVisibility(View.VISIBLE);
         } else {
             startButton.setImageResource(R.drawable.jz_click_play_selector);
+            replayTextView.setVisibility(View.INVISIBLE);
         }
     }
 }

@@ -32,7 +32,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public TextureViewContainer textureViewContainer;
 
     public ProgressBar bottomProgressBar, loadingProgressBar;
-    public TextView replayTextView;
 
     public boolean mTouchingProgressBar;
 
@@ -65,7 +64,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomProgressBar = findViewById(R.id.bottom_progress);
 
         loadingProgressBar = findViewById(R.id.loading);
-        replayTextView = findViewById(R.id.replay_text);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
@@ -292,12 +290,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -314,12 +310,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
                         View.VISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
                         View.VISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -337,12 +331,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -381,12 +373,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -424,12 +414,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -447,12 +435,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
                         View.INVISIBLE, View.INVISIBLE);
-                updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -466,18 +452,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         bottomContainer.setVisibility(bottomCon);
         loadingProgressBar.setVisibility(loadingPro);
         bottomProgressBar.setVisibility(bottomPro);
-    }
-
-    public void updateStartImage() {
-        if (getStateMachine().currentStatePlaying()) {
-            replayTextView.setVisibility(INVISIBLE);
-        } else if (getStateMachine().currentStateError()) {
-            replayTextView.setVisibility(INVISIBLE);
-        } else if (getStateMachine().currentStateAutoComplete()) {
-            replayTextView.setVisibility(VISIBLE);
-        } else {
-            replayTextView.setVisibility(INVISIBLE);
-        }
     }
 
     @Override
