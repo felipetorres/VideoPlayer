@@ -31,7 +31,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public ViewGroup topContainer, bottomContainer;
     public TextureViewContainer textureViewContainer;
 
-    public ProgressBar bottomProgressBar, loadingProgressBar;
+    public ProgressBar bottomProgressBar;
 
     public boolean mTouchingProgressBar;
 
@@ -62,8 +62,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         progressBar.setOnSeekBarChangeListener(this);
 
         bottomProgressBar = findViewById(R.id.bottom_progress);
-
-        loadingProgressBar = findViewById(R.id.loading);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
@@ -74,14 +72,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         }
 
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_fullscreen));
             textureViewContainer.initTextureView();
-        } else if (currentScreen == SCREEN_WINDOW_NORMAL
-                || currentScreen == SCREEN_WINDOW_LIST) {
-            changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                    View.INVISIBLE, View.INVISIBLE);
+                    View.INVISIBLE);
             textureViewContainer.addTextureView();
         }
 
@@ -91,12 +85,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             JZVideoPlayerManager.setFirstFloor(this);
             backPress();
         }
-    }
-
-    public void changeStartButtonSize(int size) {
-        ViewGroup.LayoutParams lp = loadingProgressBar.getLayoutParams();
-        lp.height = size;
-        lp.width = size;
     }
 
     @Override
@@ -124,7 +112,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         for (JZUIControlComponent component : loader.getRegisteredControlComponents()) {
             component.onPreparingChangingUrl();
         }
-        loadingProgressBar.setVisibility(VISIBLE);
     }
 
     @Override
@@ -289,11 +276,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -309,11 +296,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.VISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -330,11 +317,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -351,11 +338,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.VISIBLE);
+                        View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.VISIBLE);
+                        View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -372,11 +359,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -392,11 +379,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.VISIBLE);
+                        View.VISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.VISIBLE);
+                        View.VISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -413,11 +400,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -434,11 +421,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             case SCREEN_WINDOW_NORMAL:
             case SCREEN_WINDOW_LIST:
                 setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
                 setAllControlsVisiblity(View.VISIBLE, View.INVISIBLE,
-                        View.INVISIBLE, View.INVISIBLE);
+                        View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
                 break;
@@ -446,11 +433,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
 
     }
 
-    public void setAllControlsVisiblity(int topCon, int bottomCon, int loadingPro,
+    public void setAllControlsVisiblity(int topCon, int bottomCon,
                                         int bottomPro) {
         topContainer.setVisibility(topCon);
         bottomContainer.setVisibility(bottomCon);
-        loadingProgressBar.setVisibility(loadingPro);
         bottomProgressBar.setVisibility(bottomPro);
     }
 

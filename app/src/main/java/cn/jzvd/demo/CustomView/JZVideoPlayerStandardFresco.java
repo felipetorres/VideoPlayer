@@ -30,7 +30,6 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
         super.init(context);
         bottomProgressBar = findViewById(R.id.bottom_progress);
 //        thumbImageView = findViewById(R.id.thumb);
-        loadingProgressBar = findViewById(R.id.loading);
 
 //        thumbImageView.setOnClickListener(this);
     }
@@ -41,7 +40,7 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
         if (objects.length == 0) return;
         if (currentScreen == SCREEN_WINDOW_TINY) {
             setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE,
-                    View.INVISIBLE, View.INVISIBLE);
+                    View.INVISIBLE);
         }
     }
 

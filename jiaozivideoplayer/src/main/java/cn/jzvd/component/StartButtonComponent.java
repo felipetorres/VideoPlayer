@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +24,10 @@ public class StartButtonComponent extends JZUIControlComponent {
 
     private static final String TAG = "StartButtonComponent";
 
+    public ProgressBar loadingProgressBar;
     private ImageView startButton;
     private TextView replayTextView;
+
 
     public StartButtonComponent(JZVideoPlayer player) {
         super(player);
@@ -32,6 +35,7 @@ public class StartButtonComponent extends JZUIControlComponent {
 
     @Override
     protected void init(FrameLayout frameLayout) {
+        loadingProgressBar = frameLayout.findViewById(R.id.loading);
         startButton = frameLayout.findViewById(R.id.start);
         replayTextView = frameLayout.findViewById(R.id.replay_text);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -88,11 +92,17 @@ public class StartButtonComponent extends JZUIControlComponent {
             changeStartButtonSize((int) player.getResources().getDimension(R.dimen.jz_start_button_w_h_normal));
         } else if (player.currentScreen == SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.INVISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
     private void changeStartButtonSize(int size) {
-        ViewGroup.LayoutParams lp = startButton.getLayoutParams();
+        changeSize(startButton, size);
+        changeSize(loadingProgressBar, size);
+    }
+
+    private void changeSize(View view, int size) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
         lp.height = size;
         lp.width = size;
     }
@@ -101,6 +111,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onNormal(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             updateStartImage();
         }
     }
@@ -109,6 +120,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onPreparing(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.INVISIBLE);
+            loadingProgressBar.setVisibility(View.VISIBLE);
             updateStartImage();
         }
     }
@@ -117,6 +129,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onPlayingShow(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             updateStartImage();
         }
     }
@@ -125,6 +138,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onPlayingClear(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.INVISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -132,6 +146,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onPauseShow(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             updateStartImage();
         }
     }
@@ -140,6 +155,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onPauseClear(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.INVISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -147,6 +163,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onComplete(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             updateStartImage();
         }
     }
@@ -155,6 +172,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     public void onError(int currentScreen) {
         if (currentScreen != SCREEN_WINDOW_TINY) {
             startButton.setVisibility(View.VISIBLE);
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             updateStartImage();
         }
     }
@@ -162,6 +180,7 @@ public class StartButtonComponent extends JZUIControlComponent {
     @Override
     public void onPreparingChangingUrl() {
         startButton.setVisibility(View.INVISIBLE);
+        loadingProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
