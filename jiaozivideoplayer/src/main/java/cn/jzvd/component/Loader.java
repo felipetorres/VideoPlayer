@@ -15,6 +15,7 @@ public class Loader {
 
     public void registerControlComponents(JZVideoPlayer player) {
         registerControl(new TopContainer(player),
+                        new BottomContainer(player),
                         new ThumbComponent(player),
                         new RetryComponent(player),
                         new StartButtonComponent(player),

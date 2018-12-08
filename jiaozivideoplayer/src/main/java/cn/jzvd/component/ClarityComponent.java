@@ -58,7 +58,7 @@ public class ClarityComponent extends JZUIComponent {
 
     @Override
     public void onClickUiToggle() {
-        if (player.bottomContainer.getVisibility() != View.VISIBLE) {
+        if (player.getBottomContainerVisibility() != View.VISIBLE) {
             clarity.setText(player.dataSource.getKey(player.currentUrlMapIndex));
         }
     }

@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.JZVideoPlayerStateMachine;
 import cn.jzvd.R;
 
 public abstract class JZDialog {
@@ -62,25 +63,18 @@ public abstract class JZDialog {
     }
 
     void onClickUiToggleToClear() {
-        if (player.getStateMachine().currentStatePreparing()) {
-            if (player.bottomContainer.getVisibility() == View.VISIBLE) {
+        int bottomContainerVisibility = player.getBottomContainerVisibility();
+        JZVideoPlayerStateMachine stateMachine = player.getStateMachine();
+
+        if (bottomContainerVisibility == View.VISIBLE) {
+            if (stateMachine.currentStatePreparing()) {
                 player.changeUiToPreparing();
-            } else {
-            }
-        } else if (player.getStateMachine().currentStatePlaying()) {
-            if (player.bottomContainer.getVisibility() == View.VISIBLE) {
+            } else if (stateMachine.currentStatePlaying()) {
                 player.changeUiToPlayingClear();
-            } else {
-            }
-        } else if (player.getStateMachine().currentStatePause()) {
-            if (player.bottomContainer.getVisibility() == View.VISIBLE) {
+            } else if (stateMachine.currentStatePause()) {
                 player.changeUiToPauseClear();
-            } else {
-            }
-        } else if (player.getStateMachine().currentStateAutoComplete()) {
-            if (player.bottomContainer.getVisibility() == View.VISIBLE) {
+            } else if (stateMachine.currentStateAutoComplete()) {
                 player.changeUiToComplete();
-            } else {
             }
         }
     }

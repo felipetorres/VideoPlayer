@@ -2,7 +2,6 @@ package cn.jzvd.demo.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.demo.R;
@@ -37,9 +36,6 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
     public void setUp(String url, int screen, Object... objects) {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
-        if (currentScreen == SCREEN_WINDOW_TINY) {
-            setAllControlsVisiblity(View.INVISIBLE);
-        }
     }
 
     @Override

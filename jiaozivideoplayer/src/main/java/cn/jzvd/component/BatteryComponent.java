@@ -72,7 +72,7 @@ public class BatteryComponent extends JZUIComponent {
 
     @Override
     public void onClickUiToggle() {
-        if (player.bottomContainer.getVisibility() != View.VISIBLE) {
+        if (player.getBottomContainerVisibility() != View.VISIBLE) {
             setSystemTimeAndBattery();
             if (player.getStateMachine().currentStatePreparing()) {
                 setSystemTimeAndBattery();
