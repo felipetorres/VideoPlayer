@@ -22,11 +22,9 @@ import cn.jzvd.task.ProgressTimerTask;
  */
 public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener {
 
-    public TextureViewContainer textureViewContainer;
-
-    public boolean mTouchingProgressBar;
-
     private JZDialogs dialogs;
+    public TextureViewContainer textureViewContainer;
+    public boolean mTouchingProgressBar;
 
     public JZVideoPlayerStandard(Context context) {
         super(context);

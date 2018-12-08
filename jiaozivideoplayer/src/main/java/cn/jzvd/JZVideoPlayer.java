@@ -30,7 +30,10 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
     public static final String TAG = "JiaoZiVideoPlayer";
 
-    public static final int FULL_SCREEN_NORMAL_DELAY = 300;
+    private static final int FULL_SCREEN_NORMAL_DELAY = 300;
+    private static long CLICK_QUIT_FULLSCREEN_TIME = 0;
+
+    protected static JZUserAction JZ_USER_EVENT;
 
     public static final int SCREEN_WINDOW_NORMAL = 0;
     public static final int SCREEN_WINDOW_LIST = 1;
@@ -41,12 +44,9 @@ public abstract class JZVideoPlayer extends FrameLayout {
     public static int FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = true;
-    public static long CLICK_QUIT_FULLSCREEN_TIME = 0;
-
-    protected static JZUserAction JZ_USER_EVENT;
 
     public int currentScreen = -1;
-    public Object[] objects = null;
+    private Object[] objects = null;
 
     private int widthRatio = 0;
     private int heightRatio = 0;
@@ -55,7 +55,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
     public int positionInList = -1;
 
     boolean tmp_test_back = false;
-    private JZVideoPlayerStateMachine stateMachine = new JZVideoPlayerStateMachine(this);
+    private final JZVideoPlayerStateMachine stateMachine = new JZVideoPlayerStateMachine(this);
     protected final Loader loader = new Loader();
 
     public JZVideoPlayer(Context context) {
