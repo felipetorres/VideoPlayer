@@ -25,8 +25,8 @@ public class JZVideoPlayerStandardShowTitleAfterFullscreen extends JZVideoPlayer
 
     @Override
     public void init(Context context) {
-        super.init(context);
         super.loader.register(new CustomTitleComponent(this));
+        super.init(context);
     }
 }
 

@@ -42,13 +42,19 @@ public class Loader {
     }
 
     public void registerComponents(JZVideoPlayerStandard player) {
-        register(new BatteryComponent(player),
-                 new TitleComponent(player),
-                 new FullscreenComponent(player),
-                 new TinyBackButton(player),
-                 new BackButtonComponent(player),
-                 new ClarityComponent(player));
+        List<JZUIComponent> uiComponents =
+                Arrays.asList(new BatteryComponent(player),
+                              new TitleComponent(player),
+                              new FullscreenComponent(player),
+                              new TinyBackButton(player),
+                              new BackButtonComponent(player),
+                              new ClarityComponent(player));
 
+        for (JZUIComponent component : uiComponents) {
+            if(registeredComponents.get(component.getName()) == null) {
+                register(component);
+            }
+        }
         assignToContainers(player, getRegisteredUIComponents());
     }
 
