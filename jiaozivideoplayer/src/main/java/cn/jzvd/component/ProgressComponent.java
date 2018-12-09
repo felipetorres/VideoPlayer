@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -18,6 +18,8 @@ import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.task.DismissControlViewTimerTask;
 import cn.jzvd.task.ProgressTimerTask;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
@@ -32,6 +34,8 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
 
     public ProgressComponent(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.BOTTOM;
+        super.location = PluginLocation.LEFT;
     }
 
     @Override
@@ -41,12 +45,13 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
-    protected void init(FrameLayout frameLayout) {
-        progressBar = frameLayout.findViewById(R.id.bottom_seek_progress);
-        currentTimeTextView = frameLayout.findViewById(R.id.current);
-        totalTimeTextView = frameLayout.findViewById(R.id.total);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        progressBar = parent.findViewById(R.id.bottom_seek_progress);
+        currentTimeTextView = parent.findViewById(R.id.current);
+        totalTimeTextView = parent.findViewById(R.id.total);
 
-        bottomProgressBar = frameLayout.findViewById(R.id.bottom_progress);
+        bottomProgressBar = parent.findViewById(R.id.bottom_progress);
 
         progressBar.setOnSeekBarChangeListener(this);
         progressBar.setOnTouchListener(new View.OnTouchListener() {
@@ -63,6 +68,11 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
                 return false;
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_progress;
     }
 
     @Override

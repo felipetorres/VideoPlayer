@@ -2,11 +2,11 @@ package cn.jzvd.component;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_LIST;
@@ -19,11 +19,17 @@ public class TopContainer extends JZUIControlComponent {
 
     public TopContainer(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.TOP;
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        topContainer = frameLayout.findViewById(R.id.layout_top);
+    public void init(ViewGroup parent) {
+        topContainer = parent.findViewById(R.id.top);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return 0;
     }
 
     @Override

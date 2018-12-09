@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
@@ -24,6 +27,9 @@ public class ClarityComponent extends JZUIComponent {
     public ClarityComponent(JZVideoPlayerStandard player) {
         super(player);
         this.player = player;
+        super.container = ContainerLocation.BOTTOM;
+        super.location = PluginLocation.RIGHT;
+        super.orderIfSameLocation = 0;
     }
 
     @Override
@@ -32,14 +38,21 @@ public class ClarityComponent extends JZUIComponent {
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        clarity = frameLayout.findViewById(R.id.clarity);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+
+        clarity = parent.findViewById(R.id.clarity);
         clarity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ClarityComponent.this.onClick();
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_clarity;
     }
 
     @Override

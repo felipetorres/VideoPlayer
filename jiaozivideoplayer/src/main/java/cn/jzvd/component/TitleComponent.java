@@ -1,11 +1,13 @@
 package cn.jzvd.component;
 
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 public class TitleComponent extends JZUIComponent {
 
@@ -13,11 +15,19 @@ public class TitleComponent extends JZUIComponent {
 
     public TitleComponent(JZVideoPlayerStandard player) {
         super(player);
+        super.container = ContainerLocation.TOP;
+        super.location = PluginLocation.CENTER;
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        titleTextView = frameLayout.findViewById(R.id.title);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        titleTextView = parent.findViewById(R.id.title);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_title;
     }
 
     @Override

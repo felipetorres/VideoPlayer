@@ -37,11 +37,6 @@ public class MyJZVideoPlayerStandard extends JZVideoPlayerStandardGlide {
     }
 
     @Override
-    public int getLayoutId() {
-        return cn.jzvd.R.layout.jz_layout_standard;
-    }
-
-    @Override
     public void startVideo() {
         super.startVideo();
     }

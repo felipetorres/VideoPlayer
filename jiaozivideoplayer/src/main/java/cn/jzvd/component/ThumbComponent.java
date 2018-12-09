@@ -1,7 +1,7 @@
 package cn.jzvd.component;
 
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -10,6 +10,8 @@ import cn.jzvd.JZUserActionStandard;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
@@ -19,6 +21,8 @@ public class ThumbComponent extends JZUIControlComponent {
 
     public ThumbComponent(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.NONE;
+        super.location = PluginLocation.CENTER;
     }
 
     @Override
@@ -27,14 +31,20 @@ public class ThumbComponent extends JZUIControlComponent {
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        thumbImageView = frameLayout.findViewById(R.id.thumb);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        thumbImageView = parent.findViewById(R.id.thumb);
         thumbImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ThumbComponent.this.onClick();
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_thumb;
     }
 
     @Override

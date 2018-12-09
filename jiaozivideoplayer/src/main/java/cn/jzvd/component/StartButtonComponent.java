@@ -3,7 +3,6 @@ package cn.jzvd.component;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +13,8 @@ import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_LIST;
@@ -31,19 +32,27 @@ public class StartButtonComponent extends JZUIControlComponent {
 
     public StartButtonComponent(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.CENTER;
+        super.location = PluginLocation.CENTER;
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        loadingProgressBar = frameLayout.findViewById(R.id.loading);
-        startButton = frameLayout.findViewById(R.id.start);
-        replayTextView = frameLayout.findViewById(R.id.replay_text);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        loadingProgressBar = parent.findViewById(R.id.loading);
+        startButton = parent.findViewById(R.id.start);
+        replayTextView = parent.findViewById(R.id.replay_text);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 StartButtonComponent.this.onClick();
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_start;
     }
 
     private void onClick() {

@@ -10,7 +10,6 @@ import cn.jzvd.component.ClarityComponent;
 import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.JZUIComponent;
 import cn.jzvd.component.JZUIControlComponent;
-import cn.jzvd.component.ProgressComponent;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.task.DismissControlViewTimerTask;
@@ -38,9 +37,10 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     public void init(Context context) {
         super.init(context);
 
-        super.loader.registerComponents(this);
         this.dialogs = new JZDialogs(this);
         textureViewContainer = new TextureViewContainer(this, this.dialogs);
+
+        super.loader.registerComponents(this);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
@@ -61,11 +61,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
             JZVideoPlayerManager.setFirstFloor(this);
             backPress();
         }
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.jz_layout_standard;
     }
 
     @Override
@@ -154,8 +149,9 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void setProgress(int progress) {
-        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-        progressComponent.setProgress(progress);
+        //TODO FELIPE
+//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+//        progressComponent.setProgress(progress);
     }
 
     @Override
@@ -164,14 +160,16 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         long duration = getDuration();
         int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
 
-        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-        progressComponent.setProgressAndText(mTouchingProgressBar, progress, position, duration);
+        //TODO FELIPE
+//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+//        progressComponent.setProgressAndText(mTouchingProgressBar, progress, position, duration);
     }
 
     @Override
     public void setBufferProgress(int bufferProgress) {
-        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-        progressComponent.setBufferProgress(bufferProgress);
+        //TODO FELIPE
+//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+//        progressComponent.setBufferProgress(bufferProgress);
     }
 
     private void changeUiToNormal() {

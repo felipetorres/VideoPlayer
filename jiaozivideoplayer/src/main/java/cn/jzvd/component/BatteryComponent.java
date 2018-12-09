@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +16,8 @@ import java.util.Date;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
@@ -46,13 +48,21 @@ public class BatteryComponent extends JZUIComponent {
     public BatteryComponent(JZVideoPlayerStandard player) {
         super(player);
         this.player = player;
+        super.container = ContainerLocation.TOP;
+        super.location = PluginLocation.RIGHT;
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        batteryTimeLayout = frameLayout.findViewById(R.id.battery_time_layout);
-        videoCurrentTime = frameLayout.findViewById(R.id.video_current_time);
-        batteryLevel = frameLayout.findViewById(R.id.battery_level);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        batteryTimeLayout = parent.findViewById(R.id.battery_time_layout);
+        videoCurrentTime = parent.findViewById(R.id.video_current_time);
+        batteryLevel = parent.findViewById(R.id.battery_level);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_battery;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package cn.jzvd.component;
 
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import cn.jzvd.JZDataSource;
@@ -9,6 +9,8 @@ import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerManager;
 import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 import static cn.jzvd.JZVideoPlayer.backPress;
@@ -20,6 +22,8 @@ public class TinyBackButton extends JZUIComponent {
 
     public TinyBackButton(JZVideoPlayerStandard player) {
         super(player);
+        super.container = ContainerLocation.NONE;
+        super.location = PluginLocation.LEFT;
     }
 
     @Override
@@ -28,14 +32,20 @@ public class TinyBackButton extends JZUIComponent {
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        tinyBackImageView = frameLayout.findViewById(R.id.back_tiny);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        tinyBackImageView = parent.findViewById(R.id.back_tiny);
         tinyBackImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TinyBackButton.this.onClick();
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_back_tiny;
     }
 
     private void onClick() {
@@ -51,7 +61,7 @@ public class TinyBackButton extends JZUIComponent {
         if (player.currentScreen == SCREEN_WINDOW_TINY) {
             tinyBackImageView.setVisibility(View.VISIBLE);
         } else {
-            tinyBackImageView.setVisibility(View.INVISIBLE);
+            tinyBackImageView.setVisibility(View.GONE);
         }
     }
 }

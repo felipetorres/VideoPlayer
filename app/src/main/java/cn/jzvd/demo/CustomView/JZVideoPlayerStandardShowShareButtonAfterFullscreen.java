@@ -27,15 +27,16 @@ public class JZVideoPlayerStandardShowShareButtonAfterFullscreen extends JZVideo
     @Override
     public void init(Context context) {
         super.init(context);
+        //TODO FELIPE: EXTRAIR COMPONENTE
         shareButton = findViewById(R.id.share);
         shareButton.setOnClickListener(this);
 
     }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.layout_standard_with_share_button;
-    }
+//
+//    @Override
+//    public int getLayoutId() {
+//        return R.layout.layout_standard_with_share_button;
+//    }
 
     @Override
     public void onClick(View v) {

@@ -1,7 +1,7 @@
 package cn.jzvd.component;
 
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +12,8 @@ import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
+import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
@@ -21,6 +23,8 @@ public class RetryComponent extends JZUIControlComponent {
 
     public RetryComponent(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.CENTER;
+        super.location = PluginLocation.CENTER;
     }
 
     @Override
@@ -29,16 +33,22 @@ public class RetryComponent extends JZUIControlComponent {
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        TextView mRetryBtn = frameLayout.findViewById(R.id.retry_btn);
-        mRetryLayout = frameLayout.findViewById(R.id.retry_layout);
+    public void init(ViewGroup parent) {
+        super.init(parent);
+        mRetryLayout = parent.findViewById(R.id.retry_layout);
 
+        TextView mRetryBtn = parent.findViewById(R.id.retry_btn);
         mRetryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RetryComponent.this.onClick();
             }
         });
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.plugin_retry;
     }
 
     private void onClick() {

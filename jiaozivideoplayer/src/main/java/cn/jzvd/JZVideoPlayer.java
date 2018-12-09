@@ -16,12 +16,19 @@ import android.widget.FrameLayout;
 
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.Loader;
-import cn.jzvd.component.ProgressComponent;
 import cn.jzvd.component.StartButtonComponent;
 import cn.jzvd.task.ProgressTimerTask;
+import cn.jzvd.ui.Container;
+import cn.jzvd.ui.ContainerLocation;
+
+import static cn.jzvd.ui.ContainerLocation.BOTTOM;
+import static cn.jzvd.ui.ContainerLocation.CENTER;
+import static cn.jzvd.ui.ContainerLocation.NONE;
+import static cn.jzvd.ui.ContainerLocation.TOP;
 
 /**
  * Created by Nathen on 16/7/30.
@@ -69,7 +76,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
     }
 
     public void init(Context context) {
-        View.inflate(context, getLayoutId(), this);
+        View.inflate(context, R.layout.jz_layout, this);
         loader.registerControlComponents(this);
 
         try {
@@ -80,8 +87,6 @@ public abstract class JZVideoPlayer extends FrameLayout {
             e.printStackTrace();
         }
     }
-
-    public abstract int getLayoutId();
 
     public JZVideoPlayerStateMachine getStateMachine() {
         return stateMachine;
@@ -522,8 +527,9 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
             getStateMachine().setNormal();
 
-            ProgressComponent progressComponent = jzVideoPlayer.loader.getControlComponent(ProgressComponent.class);
-            progressComponent.copySecondaryProgressFrom(this.loader);
+            //TODO FELIPE
+//            ProgressComponent progressComponent = jzVideoPlayer.loader.getControlComponent(ProgressComponent.class);
+//            progressComponent.copySecondaryProgressFrom(this.loader);
             ProgressTimerTask.start(jzVideoPlayer);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
         }

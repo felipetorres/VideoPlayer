@@ -2,11 +2,11 @@ package cn.jzvd.component;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
+import cn.jzvd.ui.ContainerLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
@@ -16,6 +16,7 @@ public class BottomContainer extends JZUIControlComponent {
 
     public BottomContainer(JZVideoPlayer player) {
         super(player);
+        super.container = ContainerLocation.BOTTOM;
     }
 
     @Override
@@ -24,8 +25,13 @@ public class BottomContainer extends JZUIControlComponent {
     }
 
     @Override
-    protected void init(FrameLayout frameLayout) {
-        bottomContainer = frameLayout.findViewById(R.id.layout_bottom);
+    public void init(ViewGroup parent) {
+        bottomContainer = parent.findViewById(R.id.bottom);
+    }
+
+    @Override
+    public int getLayoutId() {
+        return 0;
     }
 
     @Override

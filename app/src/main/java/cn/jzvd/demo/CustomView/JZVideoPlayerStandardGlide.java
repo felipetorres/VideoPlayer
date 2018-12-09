@@ -23,8 +23,8 @@ public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
 
     @Override
     public void init(Context context) {
-        super.init(context);
         super.loader.registerControl(new CustomThumbComponent(this));
+        super.init(context);
     }
 
     @Override

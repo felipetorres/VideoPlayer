@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.demo.R;
 
 //import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -37,11 +36,4 @@ public class JZVideoPlayerStandardFresco extends JZVideoPlayerStandard {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
     }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.layout_standard_fresco;
-    }
-
-
 }
