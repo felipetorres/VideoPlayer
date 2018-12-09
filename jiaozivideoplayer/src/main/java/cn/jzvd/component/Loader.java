@@ -29,8 +29,9 @@ public class Loader {
                               new BottomContainer(player),
                               new ThumbComponent(player),
                               new RetryComponent(player),
-                              new StartButtonComponent(player)
-                              /*new ProgressComponent(player)*/);
+                              new StartButtonComponent(player),
+                              new ProgressComponent(player),
+                              new BottomProgressComponent(player));
 
         for (JZUIControlComponent component : controlComponents) {
             if(registeredControlComponents.get(component.getName()) == null) {

@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.View;
 
 import cn.jzvd.component.BottomContainer;
+import cn.jzvd.component.BottomProgressComponent;
 import cn.jzvd.component.ClarityComponent;
 import cn.jzvd.component.JZCoreComponent;
 import cn.jzvd.component.JZUIComponent;
 import cn.jzvd.component.JZUIControlComponent;
+import cn.jzvd.component.ProgressComponent;
 import cn.jzvd.component.TextureViewContainer;
 import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.task.DismissControlViewTimerTask;
@@ -149,9 +151,8 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
     }
 
     public void setProgress(int progress) {
-        //TODO FELIPE
-//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-//        progressComponent.setProgress(progress);
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        progressComponent.setProgress(progress);
     }
 
     @Override
@@ -160,16 +161,19 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         long duration = getDuration();
         int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
 
-        //TODO FELIPE
-//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-//        progressComponent.setProgressAndText(mTouchingProgressBar, progress, position, duration);
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        progressComponent.setProgressAndText(mTouchingProgressBar, progress, position, duration);
+
+        BottomProgressComponent bottomProgressComponent = loader.getControlComponent(BottomProgressComponent.class);
+        bottomProgressComponent.setProgress(progress);
     }
 
     @Override
     public void setBufferProgress(int bufferProgress) {
-        //TODO FELIPE
-//        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-//        progressComponent.setBufferProgress(bufferProgress);
+        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
+        BottomProgressComponent bottomProgressComponent = loader.getControlComponent(BottomProgressComponent.class);
+        progressComponent.setBufferProgress(bufferProgress);
+        bottomProgressComponent.setBufferProgress(bufferProgress);
     }
 
     private void changeUiToNormal() {

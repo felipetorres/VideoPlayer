@@ -25,16 +25,16 @@ public abstract class JZCoreComponent implements Comparable<JZCoreComponent>{
         this.context = player.getContext();
     }
 
+    public abstract String getName();
+
+    public abstract @LayoutRes int getLayoutId();
+
     public void init(ViewGroup parent) {
         if(getLayoutId() != 0 && !isRegistered()) {
             View.inflate(parent.getContext(), getLayoutId(), parent);
         }
         this.registered = true;
     }
-
-    public abstract @LayoutRes int getLayoutId();
-
-    public abstract String getName();
 
     public abstract void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects);
 

@@ -6,7 +6,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -21,8 +20,6 @@ import cn.jzvd.task.ProgressTimerTask;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
 
-import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
-
 public class ProgressComponent extends JZUIControlComponent implements SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG = "ProgressComponent";
@@ -30,12 +27,11 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
     private SeekBar progressBar;
     private TextView currentTimeTextView;
     private TextView totalTimeTextView;
-    private ProgressBar bottomProgressBar;
 
     public ProgressComponent(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.BOTTOM;
-        super.location = PluginLocation.LEFT;
+        super.location = PluginLocation.CENTER;
     }
 
     @Override
@@ -50,8 +46,6 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
         progressBar = parent.findViewById(R.id.bottom_seek_progress);
         currentTimeTextView = parent.findViewById(R.id.current);
         totalTimeTextView = parent.findViewById(R.id.total);
-
-        bottomProgressBar = parent.findViewById(R.id.bottom_progress);
 
         progressBar.setOnSeekBarChangeListener(this);
         progressBar.setOnTouchListener(new View.OnTouchListener() {
@@ -76,11 +70,7 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
     }
 
     @Override
-    public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {
-        if (player.currentScreen == SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
+    public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) { }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -129,81 +119,39 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
     }
 
     @Override
-    public void onNormal(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
+    public void onNormal(int currentScreen) { }
 
     @Override
     public void onPreparing(int currentScreen) {
         resetProgressAndTime();
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
-    public void onPlayingShow(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
+    public void onPlayingShow(int currentScreen) { }
 
     @Override
-    public void onPlayingClear(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
+    public void onPlayingClear(int currentScreen) { }
 
     @Override
-    public void onPauseShow(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
+    public void onPauseShow(int currentScreen) { }
 
     @Override
-    public void onPauseClear(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
+    public void onPauseClear(int currentScreen) { }
 
     @Override
     public void onComplete(int currentScreen) {
         progressBar.setProgress(100);
         currentTimeTextView.setText(totalTimeTextView.getText());
-        bottomProgressBar.setProgress(100);
-
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
-    public void onError(int currentScreen) {
-        if (currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @Override
-    public void onDismissControlView() {
-        if (player.currentScreen != SCREEN_WINDOW_TINY) {
-            bottomProgressBar.setVisibility(View.VISIBLE);
-        }
-    }
+    public void onError(int currentScreen) { }
 
     private void resetProgressAndTime() {
         progressBar.setProgress(0);
         progressBar.setSecondaryProgress(0);
         currentTimeTextView.setText(JZUtils.stringForTime(0));
         totalTimeTextView.setText(JZUtils.stringForTime(0));
-
-        bottomProgressBar.setProgress(0);
-        bottomProgressBar.setSecondaryProgress(0);
     }
 
     public void setProgress(int progress) {
@@ -217,14 +165,11 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
         }
         if (position != 0) currentTimeTextView.setText(JZUtils.stringForTime(position));
         totalTimeTextView.setText(JZUtils.stringForTime(duration));
-
-        if (progress != 0) bottomProgressBar.setProgress(progress);
     }
 
     public void setBufferProgress(int bufferProgress) {
         if (bufferProgress != 0) {
             progressBar.setSecondaryProgress(bufferProgress);
-            bottomProgressBar.setSecondaryProgress(bufferProgress);
         }
     }
 
