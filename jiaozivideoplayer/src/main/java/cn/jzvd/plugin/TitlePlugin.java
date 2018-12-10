@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -9,11 +9,11 @@ import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
 
-public class TitleComponent extends JZUIComponent {
+public class TitlePlugin extends JZUiPlugin {
 
     protected TextView titleTextView;
 
-    public TitleComponent(JZVideoPlayerStandard player) {
+    public TitlePlugin(JZVideoPlayerStandard player) {
         super(player);
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.CENTER;
@@ -32,7 +32,7 @@ public class TitleComponent extends JZUIComponent {
 
     @Override
     public String getName() {
-        return TitleComponent.class.getSimpleName();
+        return TitlePlugin.class.getSimpleName();
     }
 
     @Override

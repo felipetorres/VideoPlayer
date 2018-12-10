@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.component.BatteryComponent;
-import cn.jzvd.component.JZUIComponent;
+import cn.jzvd.plugin.BatteryPlugin;
+import cn.jzvd.plugin.JZUiPlugin;
 import cn.jzvd.demo.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -33,26 +33,26 @@ public class JZVideoPlayerStandardShowShareButtonAfterFullscreen extends JZVideo
 
     @Override
     public void init(Context context) {
-        super.loader.register(new CustomBatteryComponent(this),
-                              new ShareComponent(this));
+        super.loader.register(new CustomBatteryPlugin(this),
+                              new SharePlugin(this));
 
         super.init(context);
     }
 }
 
-class CustomBatteryComponent extends BatteryComponent {
+class CustomBatteryPlugin extends BatteryPlugin {
 
-    public CustomBatteryComponent(JZVideoPlayerStandard player) {
+    public CustomBatteryPlugin(JZVideoPlayerStandard player) {
         super(player);
         super.orderIfSameLocation = 1;
     }
 }
 
-class ShareComponent extends JZUIComponent {
+class SharePlugin extends JZUiPlugin {
 
     private ImageView shareButton;
 
-    public ShareComponent(JZVideoPlayerStandard player) {
+    public SharePlugin(JZVideoPlayerStandard player) {
         super(player);
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.RIGHT;
@@ -61,7 +61,7 @@ class ShareComponent extends JZUIComponent {
 
     @Override
     public String getName() {
-        return ShareComponent.class.getSimpleName();
+        return SharePlugin.class.getSimpleName();
     }
 
     @Override

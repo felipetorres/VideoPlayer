@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.util.Log;
 import android.view.View;
@@ -21,16 +21,16 @@ import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_LIST;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_NORMAL;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
-public class StartButtonComponent extends JZUIControlComponent {
+public class StartButtonPlugin extends JZUiControlPlugin {
 
-    private static final String TAG = "StartButtonComponent";
+    private static final String TAG = "StartButtonPlugin";
 
     public ProgressBar loadingProgressBar;
     private ImageView startButton;
     private TextView replayTextView;
 
 
-    public StartButtonComponent(JZVideoPlayer player) {
+    public StartButtonPlugin(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.CENTER;
         super.location = PluginLocation.CENTER;
@@ -45,7 +45,7 @@ public class StartButtonComponent extends JZUIControlComponent {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StartButtonComponent.this.onClick();
+                StartButtonPlugin.this.onClick();
             }
         });
     }
@@ -89,7 +89,7 @@ public class StartButtonComponent extends JZUIControlComponent {
 
     @Override
     public String getName() {
-        return StartButtonComponent.class.getSimpleName();
+        return StartButtonPlugin.class.getSimpleName();
     }
 
     @Override

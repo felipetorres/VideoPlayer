@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +15,11 @@ import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_LIST;
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_NORMAL;
 import static cn.jzvd.JZVideoPlayer.backPress;
 
-public class BackButtonComponent extends JZUIComponent {
+public class BackButtonPlugin extends JZUiPlugin {
 
     private ImageView backButton;
 
-    public BackButtonComponent(JZVideoPlayerStandard player) {
+    public BackButtonPlugin(JZVideoPlayerStandard player) {
         super(player);
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.LEFT;
@@ -27,7 +27,7 @@ public class BackButtonComponent extends JZUIComponent {
 
     @Override
     public String getName() {
-        return BackButtonComponent.class.getSimpleName();
+        return BackButtonPlugin.class.getSimpleName();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BackButtonComponent extends JZUIComponent {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BackButtonComponent.this.onClick();
+                BackButtonPlugin.this.onClick();
             }
         });
     }

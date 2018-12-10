@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +12,11 @@ import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
-public class BottomProgressComponent extends JZUIControlComponent {
+public class BottomProgressPlugin extends JZUiControlPlugin {
 
     private ProgressBar bottomProgressBar;
 
-    public BottomProgressComponent(JZVideoPlayer player) {
+    public BottomProgressPlugin(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.CENTER;
@@ -24,7 +24,7 @@ public class BottomProgressComponent extends JZUIControlComponent {
 
     @Override
     public String getName() {
-        return BottomProgressComponent.class.getSimpleName();
+        return BottomProgressPlugin.class.getSimpleName();
     }
 
     @Override

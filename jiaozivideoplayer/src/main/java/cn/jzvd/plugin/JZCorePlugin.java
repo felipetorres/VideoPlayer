@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -11,7 +11,7 @@ import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
 
-public abstract class JZCoreComponent implements Comparable<JZCoreComponent>{
+public abstract class JZCorePlugin implements Comparable<JZCorePlugin>{
 
     protected JZVideoPlayer player;
     protected Context context;
@@ -20,7 +20,7 @@ public abstract class JZCoreComponent implements Comparable<JZCoreComponent>{
     private boolean registered = false;
     protected Integer orderIfSameLocation = 0;
 
-    public JZCoreComponent(JZVideoPlayer player) {
+    public JZCorePlugin(JZVideoPlayer player) {
         this.player = player;
         this.context = player.getContext();
     }
@@ -55,7 +55,7 @@ public abstract class JZCoreComponent implements Comparable<JZCoreComponent>{
     }
 
     @Override
-    public int compareTo(@NonNull JZCoreComponent other) {
+    public int compareTo(@NonNull JZCorePlugin other) {
         if(container != other.container) {
             return container.compareTo(other.container);
         } else if(location == other.location) {

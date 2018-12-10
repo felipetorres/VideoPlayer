@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,11 @@ import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
-public class RetryComponent extends JZUIControlComponent {
+public class RetryPlugin extends JZUiControlPlugin {
 
     private LinearLayout mRetryLayout;
 
-    public RetryComponent(JZVideoPlayer player) {
+    public RetryPlugin(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.CENTER;
         super.location = PluginLocation.CENTER;
@@ -29,7 +29,7 @@ public class RetryComponent extends JZUIControlComponent {
 
     @Override
     public String getName() {
-        return RetryComponent.class.getSimpleName();
+        return RetryPlugin.class.getSimpleName();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RetryComponent extends JZUIControlComponent {
         mRetryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RetryComponent.this.onClick();
+                RetryPlugin.this.onClick();
             }
         });
     }

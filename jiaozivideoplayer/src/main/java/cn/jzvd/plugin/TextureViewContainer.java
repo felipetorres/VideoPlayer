@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.content.Context;
 import android.util.Log;
@@ -22,14 +22,15 @@ import cn.jzvd.dialog.JZDialogs;
 import static cn.jzvd.JZVideoPlayer.NORMAL_ORIENTATION;
 import static cn.jzvd.JZVideoPlayer.TAG;
 
-public class TextureViewContainer extends JZComponent implements View.OnClickListener, View.OnTouchListener {
+public class TextureViewContainer implements View.OnClickListener, View.OnTouchListener {
 
     private final JZDialogs dialogs;
     private final ViewGroup view;
+    private final JZVideoPlayerStandard player;
     private int degrees = 0;
 
     public TextureViewContainer(JZVideoPlayerStandard player, JZDialogs dialogs) {
-        super(player);
+        this.player = player;
         this.dialogs = dialogs;
 
         this.view = player.findViewById(R.id.surface_container);
@@ -39,7 +40,7 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        DismissControlViewTimerTask.start(getPlayer());
+        DismissControlViewTimerTask.start(player);
     }
 
     @Override
@@ -52,17 +53,17 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     Log.i(TAG, "onTouch surfaceContainer actionDown [" + this.hashCode() + "] ");
-                    getPlayer().mTouchingProgressBar = true;
+                    player.mTouchingProgressBar = true;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     Log.i(TAG, "onTouch surfaceContainer actionMove [" + this.hashCode() + "] ");
                     break;
                 case MotionEvent.ACTION_UP:
                     Log.i(TAG, "onTouch surfaceContainer actionUp [" + this.hashCode() + "] ");
-                    getPlayer().mTouchingProgressBar = false;
+                    player.mTouchingProgressBar = false;
 
-                    ProgressTimerTask.start(getPlayer());
-                    DismissControlViewTimerTask.start(getPlayer());
+                    ProgressTimerTask.start(player);
+                    DismissControlViewTimerTask.start(player);
                     break;
             }
         }
@@ -82,7 +83,7 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
 
     public void initTextureView() {
         removeTextureView();
-        JZMediaManager.textureView = new JZResizeTextureView(getPlayer().getContext());
+        JZMediaManager.textureView = new JZResizeTextureView(player.getContext());
         JZMediaManager.textureView.setSurfaceTextureListener(JZMediaManager.instance());
         addTextureView();
     }
@@ -98,7 +99,7 @@ public class TextureViewContainer extends JZComponent implements View.OnClickLis
     }
 
     public void clearFloatScreen() {
-        Context context = getPlayer().getContext();
+        Context context = player.getContext();
 
         JZUtils.setRequestedOrientation(context, NORMAL_ORIENTATION);
         JZActionBarManager.showSupportActionBar(context);

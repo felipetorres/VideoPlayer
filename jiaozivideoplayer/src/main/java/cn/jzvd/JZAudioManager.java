@@ -4,7 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 
-import cn.jzvd.component.StartButtonComponent;
+import cn.jzvd.plugin.StartButtonPlugin;
 
 import static cn.jzvd.JZVideoPlayer.releaseAllVideos;
 
@@ -48,7 +48,7 @@ public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 try {
                     if (player != null && player.getStateMachine().currentStatePlaying()) {
-                        StartButtonComponent startButton = player.loader.getControlComponent(StartButtonComponent.class);
+                        StartButtonPlugin startButton = player.loader.getControlPlugin(StartButtonPlugin.class);
                         startButton.performClick();
                     }
                 } catch (IllegalStateException e) {

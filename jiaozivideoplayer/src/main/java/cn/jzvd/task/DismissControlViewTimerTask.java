@@ -40,7 +40,7 @@ public class DismissControlViewTimerTask extends TimerTask {
             player.post(new Runnable() {
                 @Override
                 public void run() {
-                    player.dismissRegisteredComponents();
+                    player.dismissRegisteredPlugins();
                 }
             });
         }

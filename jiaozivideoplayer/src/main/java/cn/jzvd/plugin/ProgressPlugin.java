@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
@@ -20,15 +20,15 @@ import cn.jzvd.task.ProgressTimerTask;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
 
-public class ProgressComponent extends JZUIControlComponent implements SeekBar.OnSeekBarChangeListener {
+public class ProgressPlugin extends JZUiControlPlugin implements SeekBar.OnSeekBarChangeListener {
 
-    private static final String TAG = "ProgressComponent";
+    private static final String TAG = "ProgressPlugin";
 
     private SeekBar progressBar;
     private TextView currentTimeTextView;
     private TextView totalTimeTextView;
 
-    public ProgressComponent(JZVideoPlayer player) {
+    public ProgressPlugin(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.BOTTOM;
         super.location = PluginLocation.CENTER;
@@ -36,7 +36,7 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
 
     @Override
     public String getName() {
-        return ProgressComponent.class.getSimpleName();
+        return ProgressPlugin.class.getSimpleName();
     }
 
     @Override
@@ -174,8 +174,8 @@ public class ProgressComponent extends JZUIControlComponent implements SeekBar.O
     }
 
     public void copySecondaryProgressFrom(Loader loader) {
-        ProgressComponent progressComponent = loader.getControlComponent(ProgressComponent.class);
-        int secondaryProgress = progressComponent.progressBar.getSecondaryProgress();
+        ProgressPlugin progressPlugin = loader.getControlPlugin(ProgressPlugin.class);
+        int secondaryProgress = progressPlugin.progressBar.getSecondaryProgress();
 
         progressBar.setSecondaryProgress(secondaryProgress);
     }

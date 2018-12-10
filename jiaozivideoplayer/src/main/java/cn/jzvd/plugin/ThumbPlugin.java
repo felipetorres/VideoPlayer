@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +15,11 @@ import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 
-public class ThumbComponent extends JZUIControlComponent {
+public class ThumbPlugin extends JZUiControlPlugin {
 
     protected ImageView thumbImageView;
 
-    public ThumbComponent(JZVideoPlayer player) {
+    public ThumbPlugin(JZVideoPlayer player) {
         super(player);
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.CENTER;
@@ -27,7 +27,7 @@ public class ThumbComponent extends JZUIControlComponent {
 
     @Override
     public String getName() {
-        return ThumbComponent.class.getSimpleName();
+        return ThumbPlugin.class.getSimpleName();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ThumbComponent extends JZUIControlComponent {
         thumbImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ThumbComponent.this.onClick();
+                ThumbPlugin.this.onClick();
             }
         });
     }

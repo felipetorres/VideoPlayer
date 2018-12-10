@@ -17,10 +17,10 @@ import android.widget.FrameLayout;
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 
-import cn.jzvd.component.JZCoreComponent;
-import cn.jzvd.component.Loader;
-import cn.jzvd.component.ProgressComponent;
-import cn.jzvd.component.StartButtonComponent;
+import cn.jzvd.plugin.JZCorePlugin;
+import cn.jzvd.plugin.Loader;
+import cn.jzvd.plugin.ProgressPlugin;
+import cn.jzvd.plugin.StartButtonPlugin;
 import cn.jzvd.task.ProgressTimerTask;
 
 /**
@@ -70,7 +70,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
     public void init(Context context) {
         View.inflate(context, R.layout.jz_layout, this);
-        loader.registerControlComponents(this);
+        loader.registerControlPlugins(this);
 
         try {
             if (isCurrentPlay()) {
@@ -89,9 +89,9 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
     public void setBufferProgress(int bufferProgress) { }
 
-    public void dismissRegisteredComponents() {
-        for (JZCoreComponent component : loader.getAllRegisteredComponents()) {
-            component.onDismissControlView();
+    public void dismissRegisteredPlugins() {
+        for (JZCorePlugin plugin : loader.getAllRegisteredPlugins()) {
+            plugin.onDismissControlView();
         }
     }
 
@@ -134,7 +134,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
             jzVideoPlayer.setUp(dataSource, defaultUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
 
-            StartButtonComponent startButton = jzVideoPlayer.loader.getControlComponent(StartButtonComponent.class);
+            StartButtonPlugin startButton = jzVideoPlayer.loader.getControlPlugin(StartButtonPlugin.class);
             startButton.performClick();
         }
     }
@@ -520,8 +520,8 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
             getStateMachine().setNormal();
 
-            ProgressComponent progressComponent = jzVideoPlayer.loader.getControlComponent(ProgressComponent.class);
-            progressComponent.copySecondaryProgressFrom(this.loader);
+            ProgressPlugin progressPlugin = jzVideoPlayer.loader.getControlPlugin(ProgressPlugin.class);
+            progressPlugin.copySecondaryProgressFrom(this.loader);
             ProgressTimerTask.start(jzVideoPlayer);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
         }

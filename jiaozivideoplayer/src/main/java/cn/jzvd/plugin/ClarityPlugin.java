@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -18,13 +18,13 @@ import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
-public class ClarityComponent extends JZUIComponent {
+public class ClarityPlugin extends JZUiPlugin {
 
     private TextView clarity;
     private PopupWindow clarityPopWindow;
     private JZVideoPlayerStandard player;
 
-    public ClarityComponent(JZVideoPlayerStandard player) {
+    public ClarityPlugin(JZVideoPlayerStandard player) {
         super(player);
         this.player = player;
         super.container = ContainerLocation.BOTTOM;
@@ -34,7 +34,7 @@ public class ClarityComponent extends JZUIComponent {
 
     @Override
     public String getName() {
-        return ClarityComponent.class.getSimpleName();
+        return ClarityPlugin.class.getSimpleName();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ClarityComponent extends JZUIComponent {
         clarity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ClarityComponent.this.onClick();
+                ClarityPlugin.this.onClick();
             }
         });
     }

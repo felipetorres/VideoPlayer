@@ -1,13 +1,13 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.dialog.WifiDialog;
 
-public abstract class JZUIControlComponent extends JZCoreComponent {
+public abstract class JZUiControlPlugin extends JZCorePlugin {
 
     protected static WifiDialog wifiDialog;
 
-    public JZUIControlComponent(JZVideoPlayer player) {
+    public JZUiControlPlugin(JZVideoPlayer player) {
         super(player);
         wifiDialog = new WifiDialog(player);
     }

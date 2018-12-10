@@ -8,8 +8,8 @@ import com.bumptech.glide.Glide;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayerStandard;
-import cn.jzvd.component.JZUIControlComponent;
-import cn.jzvd.component.ThumbComponent;
+import cn.jzvd.plugin.JZUiControlPlugin;
+import cn.jzvd.plugin.ThumbPlugin;
 
 public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
 
@@ -23,22 +23,22 @@ public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
 
     @Override
     public void init(Context context) {
-        super.loader.registerControl(new CustomThumbComponent(this));
+        super.loader.register(new CustomThumbPlugin(this));
         super.init(context);
     }
 
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
-        for (JZUIControlComponent component : super.loader.getRegisteredControlComponents()) {
-            component.onAutoCompletion();
+        for (JZUiControlPlugin plugin : super.loader.getRegisteredControlPlugins()) {
+            plugin.onAutoCompletion();
         }
     }
 }
 
-class CustomThumbComponent extends ThumbComponent {
+class CustomThumbPlugin extends ThumbPlugin {
 
-    public CustomThumbComponent(JZVideoPlayerStandard player) {
+    public CustomThumbPlugin(JZVideoPlayerStandard player) {
         super(player);
     }
 

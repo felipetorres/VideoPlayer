@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +21,7 @@ import cn.jzvd.ui.PluginLocation;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
 
-public class BatteryComponent extends JZUIComponent {
+public class BatteryPlugin extends JZUiPlugin {
 
     private static long LAST_GET_BATTERYLEVEL_TIME = 0;
     private static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
@@ -45,7 +45,7 @@ public class BatteryComponent extends JZUIComponent {
         }
     };
 
-    public BatteryComponent(JZVideoPlayerStandard player) {
+    public BatteryPlugin(JZVideoPlayerStandard player) {
         super(player);
         this.player = player;
         super.container = ContainerLocation.TOP;
@@ -67,7 +67,7 @@ public class BatteryComponent extends JZUIComponent {
 
     @Override
     public String getName() {
-        return BatteryComponent.class.getSimpleName();
+        return BatteryPlugin.class.getSimpleName();
     }
 
     @Override

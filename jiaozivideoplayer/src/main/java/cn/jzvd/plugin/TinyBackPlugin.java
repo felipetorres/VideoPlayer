@@ -1,4 +1,4 @@
-package cn.jzvd.component;
+package cn.jzvd.plugin;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +16,11 @@ import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_TINY;
 import static cn.jzvd.JZVideoPlayer.backPress;
 import static cn.jzvd.JZVideoPlayer.quitFullscreenOrTinyWindow;
 
-public class TinyBackButton extends JZUIComponent {
+public class TinyBackPlugin extends JZUiPlugin {
 
     private ImageView tinyBackImageView;
 
-    public TinyBackButton(JZVideoPlayerStandard player) {
+    public TinyBackPlugin(JZVideoPlayerStandard player) {
         super(player);
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.LEFT;
@@ -28,7 +28,7 @@ public class TinyBackButton extends JZUIComponent {
 
     @Override
     public String getName() {
-        return TinyBackButton.class.getSimpleName();
+        return TinyBackPlugin.class.getSimpleName();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class TinyBackButton extends JZUIComponent {
         tinyBackImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TinyBackButton.this.onClick();
+                TinyBackPlugin.this.onClick();
             }
         });
     }
