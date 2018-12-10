@@ -11,7 +11,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -22,11 +21,8 @@ public class ClarityPlugin extends JZUiPlugin {
 
     private TextView clarity;
     private PopupWindow clarityPopWindow;
-    private JZVideoPlayerStandard player;
 
-    public ClarityPlugin(JZVideoPlayerStandard player) {
-        super(player);
-        this.player = player;
+    public ClarityPlugin() {
         super.container = ContainerLocation.BOTTOM;
         super.location = PluginLocation.RIGHT;
         super.orderIfSameLocation = 0;

@@ -10,7 +10,6 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -21,8 +20,7 @@ public class RetryPlugin extends JZUiControlPlugin {
 
     private LinearLayout mRetryLayout;
 
-    public RetryPlugin(JZVideoPlayer player) {
-        super(player);
+    public RetryPlugin() {
         super.container = ContainerLocation.CENTER;
         super.location = PluginLocation.CENTER;
     }

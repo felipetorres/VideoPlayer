@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.plugin.TitlePlugin;
 
 import static cn.jzvd.JZVideoPlayer.SCREEN_WINDOW_FULLSCREEN;
@@ -25,16 +24,12 @@ public class JZVideoPlayerStandardShowTitleAfterFullscreen extends JZVideoPlayer
 
     @Override
     public void init(Context context) {
-        super.loader.register(new CustomTitlePlugin(this));
+        super.loader.register(this, new CustomTitlePlugin());
         super.init(context);
     }
 }
 
 class CustomTitlePlugin extends TitlePlugin {
-
-    CustomTitlePlugin(JZVideoPlayerStandard player) {
-        super(player);
-    }
 
     @Override
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {

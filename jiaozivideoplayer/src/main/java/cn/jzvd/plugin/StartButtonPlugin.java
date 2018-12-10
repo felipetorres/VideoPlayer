@@ -11,7 +11,6 @@ import android.widget.Toast;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -30,8 +29,7 @@ public class StartButtonPlugin extends JZUiControlPlugin {
     private TextView replayTextView;
 
 
-    public StartButtonPlugin(JZVideoPlayer player) {
-        super(player);
+    public StartButtonPlugin() {
         super.container = ContainerLocation.CENTER;
         super.location = PluginLocation.CENTER;
     }

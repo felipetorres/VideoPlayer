@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -19,8 +18,7 @@ public class BackButtonPlugin extends JZUiPlugin {
 
     private ImageView backButton;
 
-    public BackButtonPlugin(JZVideoPlayerStandard player) {
-        super(player);
+    public BackButtonPlugin() {
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.LEFT;
     }

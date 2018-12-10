@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -26,7 +25,6 @@ public class BatteryPlugin extends JZUiPlugin {
     private static long LAST_GET_BATTERYLEVEL_TIME = 0;
     private static int LAST_GET_BATTERYLEVEL_PERCENT = 70;
 
-    private final JZVideoPlayerStandard player;
     private LinearLayout batteryTimeLayout;
     private TextView videoCurrentTime;
     private ImageView batteryLevel;
@@ -45,9 +43,7 @@ public class BatteryPlugin extends JZUiPlugin {
         }
     };
 
-    public BatteryPlugin(JZVideoPlayerStandard player) {
-        super(player);
-        this.player = player;
+    public BatteryPlugin() {
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.RIGHT;
     }

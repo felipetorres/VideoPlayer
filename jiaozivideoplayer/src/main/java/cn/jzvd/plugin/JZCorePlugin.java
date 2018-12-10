@@ -20,14 +20,16 @@ public abstract class JZCorePlugin implements Comparable<JZCorePlugin>{
     private boolean registered = false;
     protected Integer orderIfSameLocation = 0;
 
-    public JZCorePlugin(JZVideoPlayer player) {
-        this.player = player;
-        this.context = player.getContext();
-    }
-
     public abstract String getName();
 
     public abstract @LayoutRes int getLayoutId();
+
+    public void setPlayer(JZVideoPlayer player) {
+        this.player = player;
+        if(player != null) {
+            this.context = player.getContext();
+        }
+    }
 
     public void init(ViewGroup parent) {
         if(getLayoutId() != 0 && !isRegistered()) {

@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerManager;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -20,8 +19,7 @@ public class TinyBackPlugin extends JZUiPlugin {
 
     private ImageView tinyBackImageView;
 
-    public TinyBackPlugin(JZVideoPlayerStandard player) {
-        super(player);
+    public TinyBackPlugin() {
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.LEFT;
     }

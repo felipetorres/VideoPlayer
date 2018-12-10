@@ -13,7 +13,6 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.task.DismissControlViewTimerTask;
 import cn.jzvd.task.ProgressTimerTask;
@@ -28,8 +27,7 @@ public class ProgressPlugin extends JZUiControlPlugin implements SeekBar.OnSeekB
     private TextView currentTimeTextView;
     private TextView totalTimeTextView;
 
-    public ProgressPlugin(JZVideoPlayer player) {
-        super(player);
+    public ProgressPlugin() {
         super.container = ContainerLocation.BOTTOM;
         super.location = PluginLocation.CENTER;
     }

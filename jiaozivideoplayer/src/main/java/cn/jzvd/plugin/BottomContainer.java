@@ -4,7 +4,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 
@@ -14,8 +13,7 @@ public class BottomContainer extends JZUiControlPlugin {
 
     private ViewGroup bottomContainer;
 
-    public BottomContainer(JZVideoPlayer player) {
-        super(player);
+    public BottomContainer() {
         super.container = ContainerLocation.BOTTOM;
     }
 

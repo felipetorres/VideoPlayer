@@ -7,8 +7,8 @@ public abstract class JZUiControlPlugin extends JZCorePlugin {
 
     protected static WifiDialog wifiDialog;
 
-    public JZUiControlPlugin(JZVideoPlayer player) {
-        super(player);
+    public void setPlayer(JZVideoPlayer player) {
+        super.setPlayer(player);
         wifiDialog = new WifiDialog(player);
     }
 

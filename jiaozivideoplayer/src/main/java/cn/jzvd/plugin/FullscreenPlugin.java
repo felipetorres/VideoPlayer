@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZUserAction;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -22,8 +21,7 @@ public class FullscreenPlugin extends JZUiPlugin {
     private static final String TAG = "FullscreenPlugin";
     private ImageView fullscreenButton;
 
-    public FullscreenPlugin(JZVideoPlayerStandard player) {
-        super(player);
+    public FullscreenPlugin() {
         super.container = ContainerLocation.BOTTOM;
         super.location = PluginLocation.RIGHT;
         super.orderIfSameLocation = 1;

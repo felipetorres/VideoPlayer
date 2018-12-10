@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -16,8 +15,7 @@ public class BottomProgressPlugin extends JZUiControlPlugin {
 
     private ProgressBar bottomProgressBar;
 
-    public BottomProgressPlugin(JZVideoPlayer player) {
-        super(player);
+    public BottomProgressPlugin() {
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.CENTER;
     }

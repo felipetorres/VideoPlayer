@@ -4,7 +4,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cn.jzvd.JZDataSource;
-import cn.jzvd.JZVideoPlayerStandard;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -13,8 +12,7 @@ public class TitlePlugin extends JZUiPlugin {
 
     protected TextView titleTextView;
 
-    public TitlePlugin(JZVideoPlayerStandard player) {
-        super(player);
+    public TitlePlugin() {
         super.container = ContainerLocation.TOP;
         super.location = PluginLocation.CENTER;
     }

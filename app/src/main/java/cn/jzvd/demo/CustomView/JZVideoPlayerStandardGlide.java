@@ -23,7 +23,7 @@ public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
 
     @Override
     public void init(Context context) {
-        super.loader.register(new CustomThumbPlugin(this));
+        super.loader.register(this, new CustomThumbPlugin());
         super.init(context);
     }
 
@@ -37,10 +37,6 @@ public class JZVideoPlayerStandardGlide extends JZVideoPlayerStandard {
 }
 
 class CustomThumbPlugin extends ThumbPlugin {
-
-    public CustomThumbPlugin(JZVideoPlayerStandard player) {
-        super(player);
-    }
 
     @Override
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {

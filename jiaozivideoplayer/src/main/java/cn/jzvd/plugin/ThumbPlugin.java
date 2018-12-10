@@ -8,7 +8,6 @@ import android.widget.Toast;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZUserActionStandard;
 import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.R;
 import cn.jzvd.ui.ContainerLocation;
 import cn.jzvd.ui.PluginLocation;
@@ -19,8 +18,7 @@ public class ThumbPlugin extends JZUiControlPlugin {
 
     protected ImageView thumbImageView;
 
-    public ThumbPlugin(JZVideoPlayer player) {
-        super(player);
+    public ThumbPlugin() {
         super.container = ContainerLocation.NONE;
         super.location = PluginLocation.CENTER;
     }
