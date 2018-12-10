@@ -2,7 +2,6 @@ package cn.jzvd.demo.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 /**
  * 这里可以监听到视频播放的生命周期和播放状态
@@ -21,19 +20,6 @@ public class MyJZVideoPlayerStandard extends JZVideoPlayerStandardGlide {
     @Override
     public void init(Context context) {
         super.init(context);
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        int i = v.getId();
-        if (i == cn.jzvd.R.id.fullscreen) {
-            if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-                //click quit fullscreen
-            } else {
-                //click goto fullscreen
-            }
-        }
     }
 
     @Override

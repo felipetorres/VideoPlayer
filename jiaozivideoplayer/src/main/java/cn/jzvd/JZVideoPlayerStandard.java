@@ -21,7 +21,7 @@ import cn.jzvd.task.ProgressTimerTask;
  * Created by Nathen
  * On 2016/04/18 16:15
  */
-public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClickListener {
+public class JZVideoPlayerStandard extends JZVideoPlayer {
 
     private JZDialogs dialogs;
     public TextureViewContainer textureViewContainer;
@@ -116,11 +116,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer implements View.OnClick
         DismissControlViewTimerTask.finish();
 
         changeUiToComplete();
-    }
-
-    @Deprecated
-    public void onClick(View v) {
-        //It will be removed in the next commits. Click behaviour must be managed by the plugins themselves.
     }
 
     public void onClickUiToggle() {
