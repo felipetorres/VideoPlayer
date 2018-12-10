@@ -174,9 +174,10 @@ public class ProgressPlugin extends JZUiControlPlugin implements SeekBar.OnSeekB
     }
 
     public void copySecondaryProgressFrom(Loader loader) {
-        ProgressPlugin progressPlugin = loader.getControlPlugin(ProgressPlugin.class);
-        int secondaryProgress = progressPlugin.progressBar.getSecondaryProgress();
-
-        progressBar.setSecondaryProgress(secondaryProgress);
+        ProgressPlugin progressPlugin = loader.getControlPluginNamed(ProgressPlugin.class);
+        if(progressPlugin != null) {
+            int secondaryProgress = progressPlugin.progressBar.getSecondaryProgress();
+            progressBar.setSecondaryProgress(secondaryProgress);
+        }
     }
 }

@@ -48,8 +48,8 @@ public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 try {
                     if (player != null && player.getStateMachine().currentStatePlaying()) {
-                        StartButtonPlugin startButton = player.loader.getControlPlugin(StartButtonPlugin.class);
-                        startButton.performClick();
+                        StartButtonPlugin startButton = player.loader.getControlPluginNamed(StartButtonPlugin.class);
+                        if (startButton != null) startButton.performClick();
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();

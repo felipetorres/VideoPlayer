@@ -140,14 +140,15 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
         }
     }
 
+    //Here, View.INVISIBLE is just an random value. Would be better to raise an exception.
     public int getBottomContainerVisibility() {
-        BottomContainer bottomContainer = loader.getControlPlugin(BottomContainer.class);
-        return bottomContainer.getVisibility();
+        BottomContainer bottomContainer = loader.getControlPluginNamed(BottomContainer.class);
+        return bottomContainer != null ? bottomContainer.getVisibility() : View.INVISIBLE;
     }
 
     public void setProgress(int progress) {
-        ProgressPlugin progressPlugin = loader.getControlPlugin(ProgressPlugin.class);
-        progressPlugin.setProgress(progress);
+        ProgressPlugin progressPlugin = loader.getControlPluginNamed(ProgressPlugin.class);
+        if (progressPlugin != null) progressPlugin.setProgress(progress);
     }
 
     @Override
@@ -156,19 +157,20 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
         long duration = getDuration();
         int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
 
-        ProgressPlugin progressPlugin = loader.getControlPlugin(ProgressPlugin.class);
-        progressPlugin.setProgressAndText(mTouchingProgressBar, progress, position, duration);
+        ProgressPlugin progressPlugin = loader.getControlPluginNamed(ProgressPlugin.class);
+        if (progressPlugin != null) progressPlugin.setProgressAndText(mTouchingProgressBar, progress, position, duration);
 
-        BottomProgressPlugin bottomProgressPlugin = loader.getControlPlugin(BottomProgressPlugin.class);
-        bottomProgressPlugin.setProgress(progress);
+        BottomProgressPlugin bottomProgressPlugin = loader.getControlPluginNamed(BottomProgressPlugin.class);
+        if (bottomProgressPlugin != null) bottomProgressPlugin.setProgress(progress);
     }
 
     @Override
     public void setBufferProgress(int bufferProgress) {
-        ProgressPlugin progressPlugin = loader.getControlPlugin(ProgressPlugin.class);
-        BottomProgressPlugin bottomProgressPlugin = loader.getControlPlugin(BottomProgressPlugin.class);
-        progressPlugin.setBufferProgress(bufferProgress);
-        bottomProgressPlugin.setBufferProgress(bufferProgress);
+        ProgressPlugin progressPlugin = loader.getControlPluginNamed(ProgressPlugin.class);
+        if (progressPlugin != null) progressPlugin.setBufferProgress(bufferProgress);
+
+        BottomProgressPlugin bottomProgressPlugin = loader.getControlPluginNamed(BottomProgressPlugin.class);
+        if (bottomProgressPlugin != null) bottomProgressPlugin.setBufferProgress(bufferProgress);
     }
 
     private void changeUiToNormal() {

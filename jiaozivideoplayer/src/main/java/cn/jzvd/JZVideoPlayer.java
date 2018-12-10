@@ -134,8 +134,8 @@ public abstract class JZVideoPlayer extends FrameLayout {
             jzVideoPlayer.setUp(dataSource, defaultUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
 
-            StartButtonPlugin startButton = jzVideoPlayer.loader.getControlPlugin(StartButtonPlugin.class);
-            startButton.performClick();
+            StartButtonPlugin startButton = jzVideoPlayer.loader.getControlPluginNamed(StartButtonPlugin.class);
+            if (startButton != null) startButton.performClick();
         }
     }
 
@@ -520,8 +520,9 @@ public abstract class JZVideoPlayer extends FrameLayout {
 
             getStateMachine().setNormal();
 
-            ProgressPlugin progressPlugin = jzVideoPlayer.loader.getControlPlugin(ProgressPlugin.class);
-            progressPlugin.copySecondaryProgressFrom(this.loader);
+            ProgressPlugin progressPlugin = jzVideoPlayer.loader.getControlPluginNamed(ProgressPlugin.class);
+            if (progressPlugin != null) progressPlugin.copySecondaryProgressFrom(this.loader);
+
             ProgressTimerTask.start(jzVideoPlayer);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
         }

@@ -76,7 +76,7 @@ public class Loader {
     }
     
     @SuppressWarnings("unchecked")
-    public <T extends JZUiControlPlugin> T getControlPlugin(Class<T> _class) {
+    public <T extends JZUiControlPlugin> T getControlPluginNamed(Class<T> _class) {
         return (T) registeredControlPlugins.get(_class.getSimpleName());
     }
 
