@@ -27,6 +27,7 @@ public class JZVideoPlayerStandardAutoCompleteAfterFullscreen extends JZVideoPla
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
             textureViewContainer.initTextureView();
+            textureViewContainer.addTextureView();
             JZAudioManager.getInstance(this).requestAudioFocus();
             JZUtils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

@@ -131,6 +131,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
         if(jzVideoPlayer != null) {
 //            final Animation ra = AnimationUtils.loadAnimation(context, R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
+            jzVideoPlayer.initTextureView();
             jzVideoPlayer.setUp(dataSource, defaultUrlMapIndex, JZVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN, objects);
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
 
@@ -138,6 +139,8 @@ public abstract class JZVideoPlayer extends FrameLayout {
             if (startButton != null) startButton.performClick();
         }
     }
+
+    public abstract void initTextureView();
 
     private static JZVideoPlayer newInstanceFrom(Context context, Class _class, @IdRes int id, FrameLayout.LayoutParams lp) {
         ViewGroup vp = (JZUtils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);

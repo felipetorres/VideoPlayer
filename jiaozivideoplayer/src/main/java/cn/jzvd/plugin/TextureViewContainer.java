@@ -85,7 +85,6 @@ public class TextureViewContainer implements View.OnClickListener, View.OnTouchL
         removeTextureView();
         JZMediaManager.textureView = new JZResizeTextureView(player.getContext());
         JZMediaManager.textureView.setSurfaceTextureListener(JZMediaManager.instance());
-        addTextureView();
     }
 
     public void addTextureView() {

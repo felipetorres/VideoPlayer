@@ -52,9 +52,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
             plugin.setUp(dataSource, defaultUrlMapIndex, screen, objects);
         }
 
-        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            textureViewContainer.initTextureView();
-        } else if (currentScreen == SCREEN_WINDOW_TINY) {
+        if (currentScreen == SCREEN_WINDOW_FULLSCREEN || currentScreen == SCREEN_WINDOW_TINY) {
             textureViewContainer.addTextureView();
         }
 
@@ -63,6 +61,11 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
             JZVideoPlayerManager.setFirstFloor(this);
             backPress();
         }
+    }
+
+    @Override
+    public void initTextureView() {
+        textureViewContainer.initTextureView();
     }
 
     @Override
@@ -245,6 +248,7 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
         JZVideoPlayerManager.completeAll();
         Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
         textureViewContainer.initTextureView();
+        textureViewContainer.addTextureView();
         JZAudioManager.getInstance(this).requestAudioFocus();
         super.startVideo();
     }
@@ -259,7 +263,6 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
     @Override
     public void startWindowFullscreen() {
         textureViewContainer.removeView(JZMediaManager.textureView);
-        textureViewContainer.addTextureView();
         super.startWindowFullscreen();
     }
 
