@@ -20,7 +20,7 @@ public abstract class JZDialog {
     private final int mScreenHeight;
     private JZVideoPlayerStandard player;
 
-    JZDialog(JZVideoPlayerStandard player) {
+    protected JZDialog(JZVideoPlayerStandard player) {
         this.player = player;
         this.mScreenWidth = player.getResources().getDisplayMetrics().widthPixels;
         this.mScreenHeight = player.getResources().getDisplayMetrics().heightPixels;
@@ -30,7 +30,7 @@ public abstract class JZDialog {
         return player.getContext();
     }
 
-    JZVideoPlayerStandard getPlayer() {
+    protected JZVideoPlayerStandard getPlayer() {
         return player;
     }
 

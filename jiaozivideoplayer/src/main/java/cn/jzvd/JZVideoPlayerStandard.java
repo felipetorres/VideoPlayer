@@ -5,15 +5,22 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Arrays;
+import java.util.List;
+
+import cn.jzvd.dialog.BrightnessDialog;
+import cn.jzvd.dialog.JZDialog;
+import cn.jzvd.dialog.JZDialogs;
+import cn.jzvd.dialog.ProgressDialog;
+import cn.jzvd.dialog.VolumeDialog;
 import cn.jzvd.plugin.BottomContainer;
 import cn.jzvd.plugin.BottomProgressPlugin;
 import cn.jzvd.plugin.ClarityPlugin;
 import cn.jzvd.plugin.JZCorePlugin;
-import cn.jzvd.plugin.JZUiPlugin;
 import cn.jzvd.plugin.JZUiControlPlugin;
+import cn.jzvd.plugin.JZUiPlugin;
 import cn.jzvd.plugin.ProgressPlugin;
 import cn.jzvd.plugin.TextureViewContainer;
-import cn.jzvd.dialog.JZDialogs;
 import cn.jzvd.task.DismissControlViewTimerTask;
 import cn.jzvd.task.ProgressTimerTask;
 
@@ -39,10 +46,22 @@ public class JZVideoPlayerStandard extends JZVideoPlayer {
     public void init(Context context) {
         super.init(context);
 
-        this.dialogs = new JZDialogs(this);
-        textureViewContainer = new TextureViewContainer(this, this.dialogs);
+        this.dialogs = dialogs();
+        this.textureViewContainer = new TextureViewContainer(this, this.dialogs);
 
         super.loader.registerUiPlugins(this);
+    }
+
+    protected JZDialogs dialogs() {
+        List<JZDialog> dialogs = Arrays.asList(new VolumeDialog(this),
+                new ProgressDialog(this),
+                new BrightnessDialog(this));
+        return new JZDialogs(this, dialogs);
+    }
+
+    @Override
+    protected JZVideoPlayerStateMachine stateMachine() {
+        return new JZVideoPlayerStateMachine(this);
     }
 
     public void setUp(JZDataSource dataSource, int defaultUrlMapIndex, int screen, Object... objects) {

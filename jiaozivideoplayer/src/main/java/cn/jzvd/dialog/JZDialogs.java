@@ -2,7 +2,7 @@ package cn.jzvd.dialog;
 
 import android.view.MotionEvent;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.jzvd.JZUserActionStandard;
@@ -10,14 +10,12 @@ import cn.jzvd.JZVideoPlayerStandard;
 
 public class JZDialogs {
 
-    private final JZVideoPlayerStandard player;
-    private final List<JZDialog> dialogs;
+    protected final JZVideoPlayerStandard player;
+    protected final List<JZDialog> dialogs;
 
-    public JZDialogs(JZVideoPlayerStandard player) {
+    public JZDialogs(JZVideoPlayerStandard player, List<JZDialog> dialogs) {
         this.player = player;
-        this.dialogs = Arrays.asList(new VolumeDialog(player),
-                                     new ProgressDialog(player),
-                                     new BrightnessDialog(player));
+        this.dialogs = dialogs == null ? new ArrayList<JZDialog>() : dialogs;
     }
 
     public boolean hasAllHidden() {
