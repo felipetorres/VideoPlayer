@@ -58,9 +58,11 @@ public class ThumbPlugin extends JZUiControlPlugin {
             return;
         }
         if (player.getStateMachine().currentStateNormal()) {
-            if (!player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file") &&
-                    !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/") &&
-                    !JZUtils.isWifiConnected(context) && !wifiDialog.showed()) {
+            if (withWifiDialog()
+                    && !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file")
+                    && !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/")
+                    && !JZUtils.isWifiConnected(context)
+                    && !wifiDialog.showed()) {
                 wifiDialog.show();
                 return;
             }

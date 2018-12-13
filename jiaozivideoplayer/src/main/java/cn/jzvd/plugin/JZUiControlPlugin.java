@@ -12,6 +12,10 @@ public abstract class JZUiControlPlugin extends JZCorePlugin {
         wifiDialog = new WifiDialog(player);
     }
 
+    protected boolean withWifiDialog() {
+        return true;
+    }
+
     public abstract void onNormal(int currentScreen);
 
     public abstract void onPreparing(int currentScreen);

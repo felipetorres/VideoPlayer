@@ -54,9 +54,11 @@ public class RetryPlugin extends JZUiControlPlugin {
             Toast.makeText(context, player.getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file") && !
-                player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/") &&
-                !JZUtils.isWifiConnected(context) && !wifiDialog.showed()) {
+        if (withWifiDialog()
+                && !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("file")
+                && !player.dataSource.getCurrentPath(player.currentUrlMapIndex).toString().startsWith("/")
+                && !JZUtils.isWifiConnected(context)
+                && !wifiDialog.showed()) {
             wifiDialog.show();
             return;
         }
