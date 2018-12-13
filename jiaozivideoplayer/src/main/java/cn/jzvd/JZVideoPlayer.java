@@ -55,7 +55,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
     public int positionInList = -1;
 
     boolean tmp_test_back = false;
-    private final JZVideoPlayerStateMachine stateMachine = new JZVideoPlayerStateMachine(this);
+    private JZVideoPlayerStateMachine stateMachine;
     protected final Loader loader = new Loader();
 
     public JZVideoPlayer(Context context) {
@@ -71,6 +71,7 @@ public abstract class JZVideoPlayer extends FrameLayout {
     public void init(Context context) {
         View.inflate(context, R.layout.jz_layout, this);
         loader.registerControlPlugins(this);
+        stateMachine = stateMachine();
 
         try {
             if (isCurrentPlay()) {
@@ -81,9 +82,11 @@ public abstract class JZVideoPlayer extends FrameLayout {
         }
     }
 
-    public JZVideoPlayerStateMachine getStateMachine() {
+    public final JZVideoPlayerStateMachine getStateMachine() {
         return stateMachine;
     }
+
+    protected abstract JZVideoPlayerStateMachine stateMachine();
 
     public void setProgressAndText() { }
 

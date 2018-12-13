@@ -14,10 +14,10 @@ public class JZVideoPlayerStateMachine {
 
     private static final String TAG = JZVideoPlayerStateMachine.class.getSimpleName();
 
-    private JZVideoPlayer player;
+    protected JZVideoPlayer player;
     private int currentState;
     private int urlMapIndex;
-    private long seekToInAdvance;
+    public long seekToInAdvance;
 
     public JZVideoPlayerStateMachine(JZVideoPlayer player) {
         this.player = player;
