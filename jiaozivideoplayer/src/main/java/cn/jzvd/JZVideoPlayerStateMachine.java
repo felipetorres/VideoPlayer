@@ -15,7 +15,7 @@ public class JZVideoPlayerStateMachine {
     private static final String TAG = JZVideoPlayerStateMachine.class.getSimpleName();
 
     protected JZVideoPlayer player;
-    private int currentState;
+    public int currentState;
     private int urlMapIndex;
     public long seekToInAdvance;
 
