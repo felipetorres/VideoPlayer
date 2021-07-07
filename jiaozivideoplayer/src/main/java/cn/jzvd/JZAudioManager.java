@@ -6,17 +6,15 @@ import android.util.Log;
 
 import cn.jzvd.plugin.StartButtonPlugin;
 
-import static cn.jzvd.JZVideoPlayer.releaseAllVideos;
-
 public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
 
     private static final String TAG = "JZAudioManager";
 
     private static JZAudioManager INSTANCE;
     private final AudioManager mAudioManager;
-    private JZVideoPlayerStandard player;
+    private JZVideoPlayer player;
 
-    public static JZAudioManager getInstance(JZVideoPlayerStandard player) {
+    public static JZAudioManager getInstance(JZVideoPlayer player) {
         if(INSTANCE == null) {
             INSTANCE = new JZAudioManager(player);
             INSTANCE.player = player;
@@ -42,22 +40,26 @@ public class JZAudioManager implements AudioManager.OnAudioFocusChangeListener {
             case AudioManager.AUDIOFOCUS_GAIN:
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
-                releaseAllVideos();
+                pausePlayback();
                 Log.d(TAG, "AUDIOFOCUS_LOSS [" + this.hashCode() + "]");
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                try {
-                    if (player != null && player.getStateMachine().currentStatePlaying()) {
-                        StartButtonPlugin startButton = player.loader.getControlPluginNamed(StartButtonPlugin.class);
-                        if (startButton != null) startButton.performClick();
-                    }
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
+                pausePlayback();
                 Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT [" + this.hashCode() + "]");
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 break;
+        }
+    }
+
+    private void pausePlayback() {
+        try {
+            if (player != null && player.getStateMachine().currentStatePlaying()) {
+                StartButtonPlugin startButton = player.loader.getControlPluginNamed(StartButtonPlugin.class);
+                if (startButton != null) startButton.performClick();
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 }
